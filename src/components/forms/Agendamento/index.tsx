@@ -2,6 +2,7 @@
 
 import { validadorCPF } from "@/commom/validaters";
 import BasicDateTimePicker from "@/components/BasicDatePicker";
+import BackdropLoader from "@/components/_ui/BackdropLoader";
 import Subtitle from "@/components/_ui/Subtitle";
 import Title from "@/components/_ui/Title";
 import { TMotivation } from "@/types/TMotivation";
@@ -27,6 +28,7 @@ const validate = (values: any) => {
 
 export default function AgendamentoForm() {
 
+    const [loading, updateLoading] = useState(true);
     const [motivationList, updateMotivationList] = useState<TMotivation[]>([]);
     const [vehicleTypeList, updateVehicleTypeList] = useState<TVehicle[]>([]);
     const [yardList, updateYardList] = useState<TYard[]>([]);
@@ -62,19 +64,22 @@ export default function AgendamentoForm() {
             justify: ""
         },
         validate,
-        onSubmit: async (values, {resetForm}) => {
+        onSubmit: async (values, { resetForm }) => {
             const { containeres, ...obj } = values;
-            const data = {...obj, ...containeres};
-            await saveSchedule(data);
-            // resetForm();
+            const data = { ...obj, ...containeres };
+            await saveSchedule(data, resetForm);
         }
     })
 
     useEffect(() => {
-        getMotivationList();
-        getVehicleTypeList();
-        getYardList();
-        getTransporterList();
+         const loadSelectsOptions = async () => {
+            await getMotivationList();
+            await getVehicleTypeList();
+            await getYardList();
+            await getTransporterList();
+            updateLoading(false);
+        }
+        loadSelectsOptions()
     }, []);
 
     useEffect(() => {
@@ -128,17 +133,19 @@ export default function AgendamentoForm() {
     }
 
 
-    const saveSchedule = async (data: any) => {
+    const saveSchedule = async (data: any, resetForm: Function) => {
         try {
-          await axios.post('/api/schedule', { ...data });
+            updateLoading(true);
+            await axios.post('/api/schedule', { ...data });
+            resetForm();
+            updateDataInicio(null);
+            updateDataFim(null);
         } catch (error) {
-          console.log(error);
+            console.log(error);
         } finally {
-    
+            updateLoading(false);
         }
-      }
-
-
+    }
 
 
     const veiculoSelecionado: TVehicle = vehicleTypeList.filter((obj: TVehicle) => {
@@ -147,9 +154,12 @@ export default function AgendamentoForm() {
 
 
     return (
-        <section style={{ background: '#fff', boxShadow: 'var(--box-shadow)', borderRadius: 'var(--border-radius)' }}>
+        <section style={{ position: 'relative', background: '#fff', boxShadow: 'var(--box-shadow)', borderRadius: 'var(--border-radius)' }}>
+
+            <BackdropLoader open={loading} />
 
             <Title>Agendamento</Title>
+
 
             <Paper sx={{ p: 3 }}>
 
@@ -277,9 +287,6 @@ export default function AgendamentoForm() {
                                 {formik.touched.vehicle_type && formik.errors.vehicle_type ? <div style={{ margin: '5px 5px 0', fontSize: '0.8rem', color: '#f00' }}>{formik.errors.vehicle_type}</div> : null}
                             </FormControl>
                         </Grid>
-
-
-                        {/* <Placas tipoVeiculo={Number(formik.values.tipoVeiculo)} listaDeTiposDeVeiculos={listaDeTiposDeVeiculos} values={placas} updateValue={atualizaPlacas} /> */}
 
                         {veiculoSelecionado && <Grid item xs={12}>
                             <Subtitle text="Placas" />
