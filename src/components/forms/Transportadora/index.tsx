@@ -184,7 +184,6 @@ export default function TransportadoraForm() {
         </form>
       </Paper>
 
-      <pre>{JSON.stringify(formData, null, 4)}</pre>
     </section>
   )
 }
