@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "nome": "RETIRADA DE CONTEINER CHEIO",
+        "sigla": "CG-G1",
+        "sentido": ""
+    },
+    {
+        "id": 2,
+        "nome": "teste",
+        "sigla": "CG-G1",
+        "sentido": ""
+    },
+    {
+        "id": 3,
+        "nome": "teste",
+        "sigla": "CG-G1",
+        "sentido": ""
+    },
+    {
+        "id": 4,
+        "nome": "teste",
+        "sigla": "CG-G1",
+        "sentido": ""
+    },
+    {
+        "id": 5,
+        "nome": "teste",
+        "sigla": "CG-G1",
+        "sentido": ""
+    }
+]

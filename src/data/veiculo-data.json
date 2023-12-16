@@ -1,0 +1,29 @@
+[
+    {
+        "id": 1,
+        "nome": "CAMINHÃO 3 EIXOS",
+        "sigla": "3AXL",
+        "placa_carreta": true,
+        "placa_semireboque": true,
+        "placa_reboque": true,
+        "qtde_conteiner": 4
+    },
+    {
+        "id": 2,
+        "nome": "VEICULO TESTE",
+        "sigla": "3AXL",
+        "placa_carreta": true,
+        "placa_semireboque": false,
+        "placa_reboque": false,
+        "qtde_conteiner": 2
+    },
+    {
+        "id": 3,
+        "nome": "CARRETA BITREM",
+        "sigla": "3AXL",
+        "placa_carreta": true,
+        "placa_semireboque": true,
+        "placa_reboque": false,
+        "qtde_conteiner": 1
+    }
+]

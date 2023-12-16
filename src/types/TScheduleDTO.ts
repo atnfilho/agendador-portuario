@@ -1,0 +1,22 @@
+export type TScheduleDTO = {
+    motivation_id: number,
+    yard_id: number,
+    user_id: string,
+    transporter_id: number,
+    driver_cpf: string,
+    vehicle_type_id: 0,
+    plate_front: string,
+    plate_trailer: string,
+    plate_semi_trailer: string,
+    container1: string,
+    container1iso: string,
+    container2: string,
+    container2iso: string,
+    container3: string,
+    container3iso: string,
+    container4: string,
+    container4iso: string,
+    justify: string,
+    schedule_window_start: string,
+    schedule_window_end: string
+}

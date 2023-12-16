@@ -38,6 +38,9 @@
   --callout-border-rgb: 172, 175, 176;
   --card-rgb: 180, 185, 188;
   --card-border-rgb: 131, 134, 135;
+
+  --box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  --border-radius: 4px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -77,22 +80,19 @@
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  font-size: 1rem;
+  font-family: 'Roboto', sans-serif;;
 }
 
 html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+  background: #e7e7e9;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
 }
 
 a {

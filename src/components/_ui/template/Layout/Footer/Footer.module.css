@@ -1,0 +1,19 @@
+.footer {
+    display: flex;
+    gap: 100px;
+    justify-content: center;
+    align-items: center;
+    height: 79px;
+    background-color: #323232;
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+.card__text {
+    color: #b2b2b2;
+}
+
+.highlight {
+    font-size: 22px;
+    margin-right: 5px;
+}

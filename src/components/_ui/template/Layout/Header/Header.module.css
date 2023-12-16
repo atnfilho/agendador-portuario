@@ -1,0 +1,52 @@
+.header {
+    /* position: absolute; */
+    width: 100%;
+    height: 68px;
+    left: 0px;
+    top: 1px;
+    background: #627789;
+    box-sizing: border-box;
+}
+
+.title {
+    position: absolute;
+    height: 52px;
+    /* left: 280px; */
+    left: 20px;
+    top: 16px;
+
+    font-family: 'BancoDoBrasil Textos';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 20px;
+
+    color: #fff;
+}
+
+.subtitle {
+    font-weight: lighter;
+    font-size: 12px;
+}
+
+.logo {
+    position: absolute;
+    width: 262px;
+    height: 68px;
+    left: 0px;
+    top: -1px;
+    background-color: #76879a;
+}
+
+.logo img {
+    position: relative;
+    top: 20px;
+    left: 20px;
+    text-align: center;
+}
+
+.logo img {
+    max-width: 200px;
+    width: auto;
+    height: auto;
+}

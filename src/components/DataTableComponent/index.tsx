@@ -1,0 +1,142 @@
+'use client';
+
+import { formataDataPadraoBR } from '@/commom/formatters';
+import { useMemo, useState } from 'react';
+import DataTable from 'react-data-table-component';
+import CustomLoader from './CustomLoader';
+import FilterComponent from './FilterComponent';
+import NoDataComponent from './NoDataComponent';
+
+// A super simple expandable component.
+// const ExpandedComponent = ({ data }: any) => <pre>{JSON.stringify(data, null, 2)}</pre>;
+
+//  Internally, customStyles will deep merges your customStyles with the default styling.
+const customStyles = {
+    rows: {
+        style: {
+            // minHeight: '72px', // override the row height
+            fontSize: '25px'
+        },
+    },
+    headCells: {
+        style: {
+            paddingLeft: '8px', // override the cell padding for head cells
+            paddingRight: '8px',
+            fontWeight: 'bold'
+        },
+    },
+    cells: {
+        style: {
+            paddingLeft: '8px', // override the cell padding for data cells
+            paddingRight: '8px'
+        },
+    },
+};
+
+const paginationComponentOptions = {
+    rowsPerPageText: 'Linhas por página',
+    rangeSeparatorText: 'de',
+    selectAllRowsItem: true,
+    selectAllRowsItemText: 'Todos',
+};
+
+
+const columns = [
+    {
+        name: 'Início',
+        selector: (row: any) => row.schedule_window_start,
+        sortable: true,
+        width: '150px',
+        cell: (row: any) => <div style={{ fontSize: 14 }}>{new Date(row.schedule_window_start).toLocaleDateString('pt-br', { hour: 'numeric', minute: 'numeric' })}</div>
+    },
+    {
+        name: 'Fim',
+        selector: (row: any) => row.schedule_window_end,
+        sortable: true,
+        width: '150px',
+        cell: (row: any) => <div style={{ fontSize: 14 }}>{new Date(row.schedule_window_end).toLocaleDateString('pt-br', { hour: 'numeric', minute: 'numeric' })}</div>
+    },
+    {
+        name: 'Pátio',
+        selector: (row: any) => row.yard.id,
+        sortable: true,
+        wrap: true,
+        cell: (row: any) => <div style={{fontSize: 14}}>{row.yard.name}</div>
+    },
+    {
+        name: 'Veículo',
+        selector: (row: any) => row.vehicle_type.code,
+        sortable: true,
+        wrap: true,
+        cell: (row: any) => <div style={{fontSize: 14}}>{`(${row.vehicle_type.code}) ${row.vehicle_type.name}`}</div>
+    },
+    {
+        name: 'Motivação',
+        selector: (row: any) => row.motivation.code,
+        sortable: true,
+        wrap: true,
+        cell: (row: any) => <div style={{fontSize: 14}}>{`(${row.motivation.code}) ${row.motivation.name}`}</div>
+    },
+    // {
+    //     name: 'Status',
+    //     selector: (row: any) => row.status,
+    //     sortable: true,
+    //     width: '150px',
+    //     cell: (row: any) => <div style={{fontSize: 14}}>{row.status}</div>
+    // }
+];
+
+
+
+
+
+
+export default function DataTableComponent({ data, loading }: any) {
+
+    const [filterText, setFilterText] = useState('');
+    const filteredItems = data.filter(
+        (item: any) => {
+
+            const dataInicioFormatada = formataDataPadraoBR(item.schedule_window_start);
+            const dataFimFormatada = formataDataPadraoBR(item.schedule_window_end);
+
+            return dataInicioFormatada && dataInicioFormatada.includes(filterText.toLowerCase())
+                || dataFimFormatada && dataFimFormatada.toLowerCase().includes(filterText.toLowerCase())
+                || item.motivacao && item.motivacao.toLowerCase().includes(filterText.toLowerCase())
+                || item.patio && item.patio.toLowerCase().includes(filterText.toLowerCase())
+                || item.transportadora && item.transportadora.toLowerCase().includes(filterText.toLowerCase())
+                || item.status && item.status.toLowerCase().includes(filterText.toLowerCase())
+        }
+    );
+
+
+    const subHeaderComponentMemo = useMemo(() => {
+        return (
+            <FilterComponent onFilter={(e: any) => setFilterText(e.target.value)} filterText={filterText} loading={loading} />
+        );
+    }, [filterText, loading]);
+
+
+
+    return (
+        <DataTable
+            // title={"MUI DataTable"}
+            columns={columns}
+            data={filteredItems}
+            // selectableRows
+            // expandableRows
+            // expandableRowsComponent={ExpandedComponent}
+            pagination
+            paginationComponentOptions={paginationComponentOptions}
+            customStyles={customStyles}
+            dense
+            highlightOnHover
+            progressPending={loading}
+            progressComponent={<CustomLoader />}
+            subHeader
+            subHeaderComponent={subHeaderComponentMemo}
+            noDataComponent={<NoDataComponent />}
+        />
+    );
+};
+

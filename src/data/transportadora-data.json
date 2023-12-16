@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "nome": "SPEED SISTEMAS",
+        "cnpj": "04.150.288/0001-31",
+        "razaoSocial": "RTS TECNOLOGIA E SOL",
+        "endereco": "JULIO PERNETA, 343",
+        "cep": "80810110",
+        "estado": "PR",
+        "cidade": "CURITIBA"
+    },
+    {
+        "id": 2,
+        "nome": "EMPRESA TESTE 2",
+        "cnpj": "04.150.288/0001-31",
+        "razaoSocial": "RTS TECNOLOGIA E SOL",
+        "endereco": "JULIO PERNETA, 343",
+        "cep": "80810110",
+        "estado": "PR",
+        "cidade": "CURITIBA"
+    },
+    {
+        "id": 3,
+        "nome": "EMPRESA TESTE 3",
+        "cnpj": "04.150.288/0001-31",
+        "razaoSocial": "RTS TECNOLOGIA E SOL",
+        "endereco": "JULIO PERNETA, 343",
+        "cep": "80810110",
+        "estado": "PR",
+        "cidade": "CURITIBA"
+    }
+]
