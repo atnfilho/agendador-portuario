@@ -1,5 +1,6 @@
 'use client';
 
+import BackdropLoader from '@/components/_ui/BackdropLoader';
 import Title from '@/components/_ui/Title';
 import { TMotivation } from '@/types/TMotivation';
 import AddIcon from '@mui/icons-material/Add';
@@ -17,12 +18,9 @@ export default function Home() {
     }, []);
 
     async function getMotivations() {
-
         try {
-           
             const response = await axios.get('/api/motivation?id=1&limit=100');
             updateMotivations(response.data);
-
         } catch (error) {
             console.log(error);
         } finally {
@@ -31,13 +29,9 @@ export default function Home() {
     }
 
 
-    if (loading) {
-        return <>Carregando...</>
-    }
-
-
     return (
         <>
+            <BackdropLoader open={loading} />
             <div style={{ background: '#fff' }}>
 
                 <Title>Motivações Cadastradas</Title>

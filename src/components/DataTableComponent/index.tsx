@@ -3,7 +3,6 @@
 import { formataDataPadraoBR } from '@/commom/formatters';
 import { useMemo, useState } from 'react';
 import DataTable from 'react-data-table-component';
-import CustomLoader from './CustomLoader';
 import FilterComponent from './FilterComponent';
 import NoDataComponent from './NoDataComponent';
 
@@ -120,7 +119,6 @@ export default function DataTableComponent({ data, loading }: any) {
 
     return (
         <DataTable
-            // title={"MUI DataTable"}
             columns={columns}
             data={filteredItems}
             // selectableRows
@@ -132,7 +130,7 @@ export default function DataTableComponent({ data, loading }: any) {
             dense
             highlightOnHover
             progressPending={loading}
-            progressComponent={<CustomLoader />}
+            progressComponent={<></>}
             subHeader
             subHeaderComponent={subHeaderComponentMemo}
             noDataComponent={<NoDataComponent />}

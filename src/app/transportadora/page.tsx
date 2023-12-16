@@ -1,6 +1,7 @@
 'use client';
 
 
+import BackdropLoader from "@/components/_ui/BackdropLoader";
 import Title from "@/components/_ui/Title";
 import { TTransporter } from "@/types/TTransporter";
 import AddIcon from '@mui/icons-material/Add';
@@ -28,12 +29,11 @@ export default function Home() {
         }
     }
 
-    if (loading) {
-        return <>Carregando...</>
-    }
 
     return (
         <>
+            <BackdropLoader open={loading} />
+            
             <div style={{ background: '#fff' }}>
 
                 <Title>Transportadoras Cadastradas</Title>

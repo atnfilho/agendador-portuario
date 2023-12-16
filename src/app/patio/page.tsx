@@ -1,6 +1,7 @@
 'use client';
 
 
+import BackdropLoader from "@/components/_ui/BackdropLoader";
 import Title from "@/components/_ui/Title";
 import { TYard } from "@/types/TYard";
 import AddIcon from '@mui/icons-material/Add';
@@ -29,13 +30,10 @@ export default function Home() {
     }
 
 
-    if (loading) {
-        return <>Carregando...</>
-    }
-
-
     return (
         <>
+            <BackdropLoader open={loading} />
+            
             <div style={{ background: '#fff' }}>
 
                 <Title>Pátios Cadastrados</Title>

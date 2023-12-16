@@ -1,5 +1,6 @@
 'use client';
 
+import BackdropLoader from "@/components/_ui/BackdropLoader";
 import Title from "@/components/_ui/Title";
 import SaveIcon from '@mui/icons-material/Save';
 import { Button, Grid, Paper, TextField } from "@mui/material";
@@ -9,6 +10,7 @@ import { useState } from "react";
 export function MotivacaoForm() {
 
   const [formData, setFormData] = useState({ name: '', code: '', description: '' });
+  const [loading, updateLoading] = useState(false);
 
   const handleChange = (e: any) => {
     const value = e.target.value;
@@ -23,17 +25,20 @@ export function MotivacaoForm() {
 
   const saveMotivation = async () => {
     try {
+      updateLoading(true);
       await axios.post('/api/motivation', { ...formData });
       setFormData({ name: '', code: '', description: '' });
     } catch (error) {
       console.log(error);
     } finally {
-
+      updateLoading(false);
     }
   }
 
   return (
     <section style={{ background: '#fff', boxShadow: 'var(--box-shadow)', borderRadius: 'var(--border-radius)' }}>
+
+      <BackdropLoader open={loading} />
 
       <Title>Cadastro</Title>
 
