@@ -1,6 +1,7 @@
 'use client';
 
-import { validadorCPF } from "@/commom/validaters";
+import { cpfMask } from "@/commom/masks";
+import { validarCPF } from "@/commom/validaters";
 import BasicDateTimePicker from "@/components/BasicDatePicker";
 import BackdropLoader from "@/components/_ui/BackdropLoader";
 import Subtitle from "@/components/_ui/Subtitle";
@@ -19,7 +20,7 @@ import Containeres from "./Conteineres";
 const validate = (values: any) => {
     const errors: any = {};
 
-    if (!validadorCPF(values.driver_cpf)) {
+    if (!validarCPF(values.driver_cpf)) {
         errors.driver_cpf = 'CPF inválido';
     }
 
@@ -72,7 +73,7 @@ export default function AgendamentoForm() {
     })
 
     useEffect(() => {
-         const loadSelectsOptions = async () => {
+        const loadSelectsOptions = async () => {
             await getMotivationList();
             await getVehicleTypeList();
             await getYardList();
@@ -261,7 +262,7 @@ export default function AgendamentoForm() {
                                 name="driver_cpf"
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
-                                value={formik.values.driver_cpf}
+                                value={cpfMask(formik.values.driver_cpf)}
                                 required
                             />
                             {formik.touched.driver_cpf && formik.errors.driver_cpf ? <div style={{ margin: '5px 5px 0', fontSize: '0.8rem', color: '#f00' }}>{formik.errors.driver_cpf}</div> : null}
@@ -298,8 +299,10 @@ export default function AgendamentoForm() {
                                 name="plate_front"
                                 size="small"
                                 fullWidth
-                                inputProps={{ maxLength: 7, textTransform: 'uppercase' }}
-                                onChange={formik.handleChange}
+                                inputProps={{ maxLength: 7, style: { textTransform: 'uppercase' } }}
+                                onChange={(e) => {
+                                    formik.setFieldValue('plate_front', e.target.value.toUpperCase());
+                                }}
                                 value={formik.values.plate_front}
                                 required
                             />
@@ -313,8 +316,10 @@ export default function AgendamentoForm() {
                                     name="plate_trailer"
                                     size="small"
                                     fullWidth
-                                    inputProps={{ maxLength: 7, textTransform: 'uppercase' }}
-                                    onChange={formik.handleChange}
+                                    inputProps={{ maxLength: 7, style: { textTransform: 'uppercase' } }}
+                                    onChange={(e) => {
+                                        formik.setFieldValue('plate_trailer', e.target.value.toUpperCase());
+                                    }}
                                     value={formik.values.plate_trailer}
                                     required
                                 />
@@ -327,8 +332,10 @@ export default function AgendamentoForm() {
                                 name="plate_semi_trailer"
                                 size="small"
                                 fullWidth
-                                inputProps={{ maxLength: 7, textTransform: 'uppercase' }}
-                                onChange={formik.handleChange}
+                                inputProps={{ maxLength: 7, style: { textTransform: 'uppercase' } }}
+                                onChange={(e) => {
+                                    formik.setFieldValue('plate_semi_trailer', e.target.value.toUpperCase());
+                                }}
                                 value={formik.values.plate_semi_trailer}
                                 required
                             />

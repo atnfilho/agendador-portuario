@@ -1,4 +1,4 @@
-const formataDataPadraoBR = (value: string) => {
+export const formataDataPadraoBR = (value: string) => {
     const dataArray = value.split(" ");
     const data = dataArray[0];
     const hora = dataArray[1];
@@ -6,5 +6,6 @@ const formataDataPadraoBR = (value: string) => {
     return `${dataBR} ${hora}`;
 }
 
-
-export { formataDataPadraoBR };
+export const onlyNumbers = (value: string) => {
+    return value.replace(/\D/g, '');
+}

@@ -1,6 +1,7 @@
 'use client';
 
 
+import { cepMask, cnpjMask } from "@/commom/masks";
 import BackdropLoader from "@/components/_ui/BackdropLoader";
 import Title from "@/components/_ui/Title";
 import { TTransporter } from "@/types/TTransporter";
@@ -66,10 +67,10 @@ export default function Home() {
                                 {transporters.map((item: TTransporter, index) => (
                                     <TableRow key={index}>
                                         <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.name}</TableCell>
-                                        <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.cnpj}</TableCell>
+                                        <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{cnpjMask(item.cnpj)}</TableCell>
                                         <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.socialrazion}</TableCell>
                                         <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.address}</TableCell>
-                                        <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.cep}</TableCell>
+                                        <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{cepMask(item.cep)}</TableCell>
                                         <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.city}</TableCell>
                                     </TableRow>
 

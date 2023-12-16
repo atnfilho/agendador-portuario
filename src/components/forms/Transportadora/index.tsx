@@ -1,5 +1,8 @@
 'use client';
 
+import { onlyNumbers } from "@/commom/formatters";
+import { cepMask, cnpjMask } from "@/commom/masks";
+import { validarCNPJ } from "@/commom/validaters";
 import BackdropLoader from "@/components/_ui/BackdropLoader";
 import Title from "@/components/_ui/Title";
 import SaveIcon from '@mui/icons-material/Save';
@@ -23,8 +26,12 @@ export default function TransportadoraForm() {
 
 
   const handleChange = (e: any) => {
-    const value = e.target.value;
-    setFormData({ ...formData, [e.target.name]: value });
+    let { name, value } = e.target;
+
+    if(["number", "cep", "cnpj"].includes(name)) value = onlyNumbers(value);
+
+    setFormData({ ...formData, [name]: value });
+
   }
 
   const handleSubmit = async (e: any) => {
@@ -33,20 +40,37 @@ export default function TransportadoraForm() {
   }
 
 
+  const validate = () => {
+
+    if(!validarCNPJ(formData.cnpj)) {
+      alert('CNPJ inválido!');
+      return false;
+    }
+
+    return true;
+  }
+
+
+
   const saveTransporter = async () => {
+
+    if(!validate()) return;
+
     try {
       updateLoading(true);
+
       const data = {
         name: formData.name,
         cnpj: formData.cnpj,
         socialrazion: formData.socialrazion,
         cep: formData.cep,
         address: `${formData.address}, ${formData.number}`,
-        city: `${formData.city}/${formData.uf}`
+        city: `${formData.city}/${formData.uf.toUpperCase()}`
       }
 
       await axios.post('/api/transporter', { ...data });
       setFormData({ name: '', cnpj: '', socialrazion: '', cep: '', address: '', number: '', city: '', uf: '' });
+      
     } catch (error) {
       console.log(error);
     } finally {
@@ -61,7 +85,6 @@ export default function TransportadoraForm() {
       setFormData((prevData) => ({ ...prevData, uf: data.state, city: data.city, address: data.street }));
     } catch (error) {
       setFormData((prevData) => ({ ...prevData, uf: "", city: "", address: "" }));
-      console.log(error);
     } finally {
       updateLoading(false)
     }
@@ -101,7 +124,7 @@ export default function TransportadoraForm() {
                 inputProps={{ maxLength: 14 }}
                 fullWidth
                 name="cnpj"
-                value={formData.cnpj}
+                value={cnpjMask(formData.cnpj)}
                 onChange={handleChange}
                 required
               />
@@ -125,7 +148,7 @@ export default function TransportadoraForm() {
                 name="cep"
                 size="small"
                 inputProps={{ maxLength: 8 }}
-                value={formData.cep}
+                value={cepMask(formData.cep)}
                 onChange={handleChange}
                 onBlur={() => {
                   obtemDadosDeEndereco(formData.cep)
@@ -178,7 +201,7 @@ export default function TransportadoraForm() {
                 label="UF"
                 size="small"
                 name="uf"
-                inputProps={{ maxLength: 2 }}
+                inputProps={{ maxLength: 2, style: {textTransform: 'uppercase'} }}
                 value={formData.uf}
                 onChange={handleChange}
                 fullWidth

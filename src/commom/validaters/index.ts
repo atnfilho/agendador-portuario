@@ -1,4 +1,4 @@
-const validadorCPF = (cpf: any) => {
+function validarCPF(cpf: any) {
     // inicia as variaveis que serão ultilizadas no codigo
     var Soma: any,
         i: any,
@@ -42,4 +42,41 @@ const validadorCPF = (cpf: any) => {
 };
 
 
-export { validadorCPF };
+function validarCNPJ(cnpj: string): boolean {
+    // Remover caracteres não numéricos
+    cnpj = cnpj.replace(/\D/g, '');
+
+    // Verificar se o CNPJ possui 14 dígitos
+    if (cnpj.length !== 14) {
+        return false;
+    }
+
+    // Calcular os dígitos verificadores
+    const primeiroDigito = calcularDigitoVerificador(cnpj.substring(0, 12));
+    const segundoDigito = calcularDigitoVerificador(cnpj.substring(0, 12) + primeiroDigito);
+
+    // Verificar se os dígitos verificadores estão corretos
+    if (cnpj.substring(12, 14) !== primeiroDigito + segundoDigito) {
+        return false;
+    }
+
+    return true;
+}
+
+function calcularDigitoVerificador(parteCnpj: string): string {
+    let soma = 0;
+    let peso = 2;
+
+    for (let i = parteCnpj.length - 1; i >= 0; i--) {
+        soma += parseInt(parteCnpj[i]) * peso;
+        peso = peso === 9 ? 2 : peso + 1;
+    }
+
+    const resto = soma % 11;
+    const digito = resto < 2 ? 0 : 11 - resto;
+
+    return digito.toString();
+}
+
+export { validarCNPJ, validarCPF };
+
