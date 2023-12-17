@@ -24,6 +24,19 @@ const validate = (values: any) => {
         errors.driver_cpf = 'CPF inválido';
     }
 
+    if(values.schedule_window_start >= values.schedule_window_end) {
+        errors.schedule_window_end = 'Data final deve ser maior que a data inicial do agendamento.';
+    }
+
+    if(!values.schedule_window_start) {
+        errors.schedule_window_start = 'Informe a data e hora inicial do agendamento.';
+    }
+
+    if(!values.schedule_window_end) {
+        errors.schedule_window_end = 'Informe a data e hora final do agendamento.';
+    }
+
+
     return errors;
 }
 
@@ -349,10 +362,12 @@ export default function AgendamentoForm() {
 
                         <Grid item xs={3}>
                             <BasicDateTimePicker label="Início" value={dataInicio} handleChange={updateDataInicio} />
+                            {formik.touched.schedule_window_start && formik.errors.schedule_window_start ? <div style={{ margin: '5px 5px 0', fontSize: '0.8rem', color: '#f00' }}>{formik.errors.schedule_window_start}</div> : null}
                         </Grid>
 
                         <Grid item xs={3}>
                             <BasicDateTimePicker label="Fim" value={dataFim} handleChange={updateDataFim} />
+                            {formik.touched.schedule_window_end && formik.errors.schedule_window_end ? <div style={{ margin: '5px 5px 0', fontSize: '0.8rem', color: '#f00' }}>{formik.errors.schedule_window_end}</div> : null}
                         </Grid>
 
 

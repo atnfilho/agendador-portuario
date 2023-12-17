@@ -1,6 +1,5 @@
-import { renderTimeViewClock } from '@mui/x-date-pickers';
+import { MobileDateTimePicker, ptBR, renderTimeViewClock } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import 'dayjs/locale/pt-br';
@@ -17,11 +16,13 @@ export default function BasicDateTimePicker({ label, value, handleChange }: Prop
     // const [value, setValue] = useState<Dayjs | null>(null);
 
     return (
-        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='pt-br'>
+        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='pt-br' localeText={ptBR.components.MuiLocalizationProvider.defaultProps.localeText}>
             <DemoContainer components={['DateTimePicker']}>
-                <DateTimePicker
+                <MobileDateTimePicker
+                    orientation='landscape'
                     label={label}
                     ampm={false}
+                    disablePast
                     value={value}
                     onChange={handleChange}
                     viewRenderers={{
@@ -29,6 +30,14 @@ export default function BasicDateTimePicker({ label, value, handleChange }: Prop
                         minutes: renderTimeViewClock,
                         seconds: renderTimeViewClock,
                     }}
+                    slotProps={{
+                        layout: {
+                          sx: {
+                            '.MuiTypography-root': {
+                            }
+                          }
+                        }
+                      }} 
                 />
             </DemoContainer>
         </LocalizationProvider>
