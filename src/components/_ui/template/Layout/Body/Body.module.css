@@ -14,7 +14,7 @@
 .infobox {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end; 
+    justify-content: space-between; 
     color: #fff;
     background: #76879a;
     height: 160px;

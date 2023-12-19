@@ -3,11 +3,9 @@ import axiosDefault from "../axiosDefault";
 
 const yardService = {
 
-    all: async (params: any) => {
+    all: async () => {
         try {
-            const response = await axiosDefault.get(`/yard`, {
-                params: { ...params }
-            });
+            const response = await axiosDefault.get(`/yard`);
             return response.data;
         } catch (error: any) {
 

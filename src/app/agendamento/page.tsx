@@ -23,7 +23,7 @@ export default function Home() {
 
     async function getSchedules() {
         try {
-            const response = await axios.get('/api/schedule?id=1&limit=100');
+            const response = await axios.get('/api/schedule');
             updateSchedules(response.data);
 
         } catch (error) {

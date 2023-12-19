@@ -112,7 +112,7 @@ export default function AgendamentoForm() {
     async function getMotivationList() {
         console.log('chamou')
         try {
-            const response = await axios.get('/api/motivation?id=1&limit=100');
+            const response = await axios.get('/api/motivation');
             updateMotivationList(response.data);
         } catch (error) {
             console.log(error);
@@ -121,7 +121,7 @@ export default function AgendamentoForm() {
 
     async function getVehicleTypeList() {
         try {
-            const response = await axios.get('/api/vehicle?id=1&limit=100');
+            const response = await axios.get('/api/vehicle');
             updateVehicleTypeList(response.data);
         } catch (error) {
             console.log(error);
@@ -130,7 +130,7 @@ export default function AgendamentoForm() {
 
     async function getYardList() {
         try {
-            const response = await axios.get('/api/yard?id=1&limit=100');
+            const response = await axios.get('/api/yard');
             updateYardList(response.data);
         } catch (error) {
             console.log(error);
@@ -139,7 +139,7 @@ export default function AgendamentoForm() {
 
     async function getTransporterList() {
         try {
-            const response = await axios.get('/api/transporter?id=1&limit=100');
+            const response = await axios.get('/api/transporter');
             updateTransporterList(response.data);
         } catch (error) {
             console.log(error);

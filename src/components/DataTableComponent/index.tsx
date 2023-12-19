@@ -56,13 +56,6 @@ const columns = [
         cell: (row: any) => <div style={{ fontSize: 14 }}>{new Date(row.schedule_window_end).toLocaleDateString('pt-br', { hour: 'numeric', minute: 'numeric' })}</div>
     },
     {
-        name: 'Pátio',
-        selector: (row: any) => row.yard.id,
-        sortable: true,
-        wrap: true,
-        cell: (row: any) => <div style={{fontSize: 14}}>{row.yard.name}</div>
-    },
-    {
         name: 'Veículo',
         selector: (row: any) => row.vehicle_type.code,
         sortable: true,
@@ -76,13 +69,19 @@ const columns = [
         wrap: true,
         cell: (row: any) => <div style={{fontSize: 14}}>{`(${row.motivation.code}) ${row.motivation.name}`}</div>
     },
-    // {
-    //     name: 'Status',
-    //     selector: (row: any) => row.status,
-    //     sortable: true,
-    //     width: '150px',
-    //     cell: (row: any) => <div style={{fontSize: 14}}>{row.status}</div>
-    // }
+    {
+        name: 'Transportadora',
+        selector: (row: any) => row.transporter.name,
+        sortable: true,
+        cell: (row: any) => <div style={{fontSize: 14}}>{row.transporter.name}</div>
+    },
+    {
+        name: 'Pátio',
+        selector: (row: any) => row.yard.id,
+        sortable: true,
+        wrap: true,
+        cell: (row: any) => <div style={{fontSize: 14}}>{row.yard.name}</div>
+    }
 ];
 
 
@@ -92,6 +91,7 @@ const columns = [
 
 export default function DataTableComponent({ data, loading }: any) {
 
+    console.log({data})
     const [filterText, setFilterText] = useState('');
     const filteredItems = data.filter(
         (item: any) => {
@@ -101,10 +101,9 @@ export default function DataTableComponent({ data, loading }: any) {
 
             return dataInicioFormatada && dataInicioFormatada.includes(filterText.toLowerCase())
                 || dataFimFormatada && dataFimFormatada.toLowerCase().includes(filterText.toLowerCase())
-                || item.motivacao && item.motivacao.toLowerCase().includes(filterText.toLowerCase())
-                || item.patio && item.patio.toLowerCase().includes(filterText.toLowerCase())
-                || item.transportadora && item.transportadora.toLowerCase().includes(filterText.toLowerCase())
-                || item.status && item.status.toLowerCase().includes(filterText.toLowerCase())
+                || item.motivation.name && item.motivation.name.toLowerCase().includes(filterText.toLowerCase())
+                || item.yard.name && item.yard.name.toLowerCase().includes(filterText.toLowerCase())
+                || item.transporter.name && item.transporter.name.toLowerCase().includes(filterText.toLowerCase())
         }
     );
 

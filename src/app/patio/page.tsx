@@ -20,7 +20,7 @@ export default function Home() {
 
     async function getYards() {
         try {
-            const response = await axios.get('/api/yard?id=1&limit=100');
+            const response = await axios.get('/api/yard');
             updateYards(response.data);
         } catch (error) {
             console.log(error);

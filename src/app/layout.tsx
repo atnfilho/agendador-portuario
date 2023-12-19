@@ -1,5 +1,6 @@
-import Layout from '@/components/_ui/template/Layout'
-import './globals.css'
+import Layout from '@/components/_ui/template/Layout';
+import SessionProviderWrapper from '@/utils/sessionProviderWrapper';
+import './globals.css';
 
 export default function RootLayout({
   children,
@@ -7,13 +8,15 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="pt-BR">
-      <title>AGP AGENDADOR PORTUÁRIO</title>
-      <body>
-        <Layout>
-          {children}
-        </Layout>
-      </body>
-    </html>
+    <SessionProviderWrapper>
+      <html lang="pt-BR">
+        <title>AGP AGENDADOR PORTUÁRIO</title>
+        <body>
+          <Layout>
+            {children}
+          </Layout>
+        </body>
+      </html>
+    </SessionProviderWrapper>
   )
 }

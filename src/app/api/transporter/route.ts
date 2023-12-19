@@ -1,12 +1,8 @@
 import TransporterService from "@/service/transporter";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
-
-    const id = req.nextUrl.searchParams.get('id');
-    const limit = req.nextUrl.searchParams.get('limit');
-
-    const response = await TransporterService.all({ id, limit });
+export async function GET() {
+    const response = await TransporterService.all();
     return NextResponse.json(response.items);
 }
 

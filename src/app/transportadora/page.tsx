@@ -21,7 +21,7 @@ export default function Home() {
 
     async function getTransporters() {
         try {
-            const response = await axios.get('/api/transporter?id=1&limit=100');
+            const response = await axios.get('/api/transporter');
             updateTransporters(response.data);
         } catch (error) {
             console.log(error);

@@ -3,11 +3,9 @@ import axiosDefault from "../axiosDefault";
 
 const MotivationService = {
 
-    all: async (params: any) => {
+    all: async () => {
         try {
-            const response = await axiosDefault.get(`/motivation`, {
-                params: { ...params }
-            });
+            const response = await axiosDefault.get(`/motivation`);
             return response.data;
         } catch (error: any) {
 

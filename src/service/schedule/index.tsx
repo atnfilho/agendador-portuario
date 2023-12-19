@@ -3,11 +3,9 @@ import axiosDefault from "../axiosDefault";
 
 const ScheduleService = {
 
-    all: async (params: any) => {
+    all: async () => {
         try {
-            const response = await axiosDefault.get(`/schedule`,  {
-                params: { ...params }
-            });
+            const response = await axiosDefault.get(`/schedule`);
             return response.data;
         } catch (error: any) {
 

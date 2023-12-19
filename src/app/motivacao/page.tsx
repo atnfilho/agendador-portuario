@@ -19,7 +19,7 @@ export default function Home() {
 
     async function getMotivations() {
         try {
-            const response = await axios.get('/api/motivation?id=1&limit=100');
+            const response = await axios.get('/api/motivation');
             updateMotivations(response.data);
         } catch (error) {
             console.log(error);

@@ -2,11 +2,7 @@ import MotivationService from "@/service/motivation";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
-
-    const id = req.nextUrl.searchParams.get('id');
-    const limit = req.nextUrl.searchParams.get('limit');
-
-    const response = await MotivationService.all({id, limit});
+    const response = await MotivationService.all();
     return NextResponse.json(response.items);
 }
 

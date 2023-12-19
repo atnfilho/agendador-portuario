@@ -3,11 +3,9 @@ import axiosDefault from "../axiosDefault";
 
 const VehicleService = {
 
-    all: async (params: any) => {
+    all: async () => {
         try {
-            const response = await axiosDefault.get(`/vehicle_type`, {
-                params: { ...params }
-            });
+            const response = await axiosDefault.get(`/vehicle_type`);
             return response.data;
         } catch (error: any) {
 

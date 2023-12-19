@@ -3,11 +3,9 @@ import axiosDefault from "../axiosDefault";
 
 const TransporterService = {
 
-    all: async (params: any) => {
+    all: async () => {
         try {
-            const response = await axiosDefault.get(`/transporter`,  {
-                params: { ...params }
-            });
+            const response = await axiosDefault.get(`/transporter`);
             return response.data;
         } catch (error: any) {
 

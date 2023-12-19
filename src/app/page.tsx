@@ -1,10 +1,9 @@
 
 export default function Home() {
-  return (
-    <>
-      <h1>Bem vindo ao Agendador Portuário</h1>
-    </>
-  )
-}
 
+   return (
+    <h2>Bem vindo ao agendador portuário.</h2>
+   )
+
+}
 
