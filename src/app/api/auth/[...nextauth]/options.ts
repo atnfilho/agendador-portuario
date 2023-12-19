@@ -43,4 +43,5 @@ export const options: NextAuthOptions = {
             return session;
         }
     },
+    secret: process.env.NEXT_PUBLIC_SECRET
 }
