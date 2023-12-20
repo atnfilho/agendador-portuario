@@ -1,9 +1,34 @@
+"use client";
+
 import { MotivacaoForm } from "@/components/forms/Motivacao";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
-    return (
-        <>
-        <MotivacaoForm />
-        </>
-    )
+
+    const { data: session, status }: any = useSession();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (status === "unauthenticated" ||
+            (status === "authenticated" && !session?.roles.includes("Administrator"))) {
+            router.push("/unauthorized");
+        }
+    }, [session, router, status])
+
+
+    if (status === "loading") {
+        return <></>
+    }
+
+    if (session && session.roles.includes("Administrator")) {
+        return (
+            <>
+                <MotivacaoForm />
+            </>
+        )
+    }
+
+
 }

@@ -29,7 +29,9 @@ export default function Body({ children }: any) {
 
 
     const renderLoginStatus = () => {
-        if (session) {
+        if(status === "loading") {
+            return <></>
+        } else if (session) {
             return (
                 <>
                     <div>

@@ -11,7 +11,6 @@ type ConteineresProps = {
 
 export default function Containeres({ vehicle_type, vehicleTypeList, handleChange }: ConteineresProps) {
 
-    // console.log({containeresValues: values})
 
     const veiculo: TVehicle = vehicleTypeList.filter((obj: any) => {
         return obj.id === vehicle_type;
