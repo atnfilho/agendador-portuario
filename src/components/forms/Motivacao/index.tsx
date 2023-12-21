@@ -5,12 +5,15 @@ import Title from "@/components/_ui/Title";
 import SaveIcon from '@mui/icons-material/Save';
 import { Button, Grid, Paper, TextField } from "@mui/material";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function MotivacaoForm() {
 
+  const router = useRouter();
   const [formData, setFormData] = useState({ name: '', code: '', description: '' });
   const [loading, updateLoading] = useState(false);
+  const [error, updateError] = useState("");
 
   const handleChange = (e: any) => {
     const value = e.target.value;
@@ -27,9 +30,9 @@ export function MotivacaoForm() {
     try {
       updateLoading(true);
       await axios.post('/api/motivation', { ...formData });
-      setFormData({ name: '', code: '', description: '' });
-    } catch (error) {
-      console.log(error);
+      router.push('/motivacao');
+    } catch (error: any) {
+      updateError(error.message);
     } finally {
       updateLoading(false);
     }
@@ -87,6 +90,10 @@ export function MotivacaoForm() {
             <Grid item xs={12} style={{ display: 'flex', gap: '20px' }}>
               <Button type="submit" variant="contained" size="small"><SaveIcon fontSize="small" sx={{ marginRight: '8px', marginBottom: '4px' }} />Gravar</Button>
               <Button variant="outlined" size="small"><a href="/motivacao">Voltar</a></Button>
+            </Grid>
+
+            <Grid item xs={12} style={{color: "#f00"}}>
+              {error}
             </Grid>
 
           </Grid>

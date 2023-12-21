@@ -5,13 +5,15 @@ import Title from "@/components/_ui/Title";
 import SaveIcon from '@mui/icons-material/Save';
 import { Button, Checkbox, FormControlLabel, FormGroup, Grid, Paper, TextField } from "@mui/material";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function VeiculoForm() {
 
-
+    const router = useRouter();
     const [formData, setFormData] = useState({ name: '', code: '', plate_front: false, plate_trailer: false, plate_semi_trailer: false, container_quantity: 0 });
     const [loading, updateLoading] = useState(false);
+    const [error, updateError] = useState("");
 
     const handleChange = (e: any) => {
         const { name, value, type, checked } = e.target;
@@ -30,9 +32,9 @@ export default function VeiculoForm() {
         try {
             updateLoading(true);
             await axios.post('/api/vehicle', { ...formData });
-            setFormData({ name: '', code: '', plate_front: false, plate_trailer: false, plate_semi_trailer: false, container_quantity: 0 });
-        } catch (error) {
-            console.log(error);
+            router.push('/veiculo');
+        } catch (error: any) {
+            updateError(error.message);
         } finally {
             updateLoading(false);
         }
@@ -150,6 +152,10 @@ export default function VeiculoForm() {
                         <Grid item xs={12} style={{ display: 'flex', gap: '20px' }}>
                             <Button type="submit" variant="contained" size="small"><SaveIcon fontSize="small" sx={{ marginRight: '8px', marginBottom: '4px' }} />Gravar</Button>
                             <Button variant="outlined" size="small"><a href="/veiculo">Voltar</a></Button>
+                        </Grid>
+
+                        <Grid item xs={12} style={{ color: "#f00" }}>
+                            {error}
                         </Grid>
 
                     </Grid>

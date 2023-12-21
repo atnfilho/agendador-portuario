@@ -14,6 +14,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import { Button, FormControl, Grid, InputLabel, MenuItem, Paper, Select, TextField } from "@mui/material";
 import axios from "axios";
 import { useFormik } from "formik";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Containeres from "./Conteineres";
 
@@ -24,15 +25,15 @@ const validate = (values: any) => {
         errors.driver_cpf = 'CPF inválido';
     }
 
-    if(values.schedule_window_start >= values.schedule_window_end) {
+    if (values.schedule_window_start >= values.schedule_window_end) {
         errors.schedule_window_end = 'Data final deve ser maior que a data inicial do agendamento.';
     }
 
-    if(!values.schedule_window_start) {
+    if (!values.schedule_window_start) {
         errors.schedule_window_start = 'Informe a data e hora inicial do agendamento.';
     }
 
-    if(!values.schedule_window_end) {
+    if (!values.schedule_window_end) {
         errors.schedule_window_end = 'Informe a data e hora final do agendamento.';
     }
 
@@ -42,11 +43,13 @@ const validate = (values: any) => {
 
 export default function AgendamentoForm() {
 
+    const router = useRouter();
     const [loading, updateLoading] = useState(true);
     const [motivationList, updateMotivationList] = useState<TMotivation[]>([]);
     const [vehicleTypeList, updateVehicleTypeList] = useState<TVehicle[]>([]);
     const [yardList, updateYardList] = useState<TYard[]>([]);
     const [transporterList, updateTransporterList] = useState<TTransporter[]>([]);
+    const [error, updateError] = useState("");
 
     const [dataInicio, updateDataInicio] = useState<string | null>(null);
     const [dataFim, updateDataFim] = useState<string | null>(null);
@@ -110,7 +113,6 @@ export default function AgendamentoForm() {
 
 
     async function getMotivationList() {
-        console.log('chamou')
         try {
             const response = await axios.get('/api/motivation');
             updateMotivationList(response.data);
@@ -154,8 +156,9 @@ export default function AgendamentoForm() {
             resetForm();
             updateDataInicio(null);
             updateDataFim(null);
-        } catch (error) {
-            console.log(error);
+            router.push('/agendamento');
+        } catch (error: any) {
+            updateError(error.message);
         } finally {
             updateLoading(false);
         }
@@ -390,6 +393,10 @@ export default function AgendamentoForm() {
                         <Grid item xs={12} style={{ display: 'flex', gap: '20px', margin: '20px 0' }}>
                             <Button type="submit" variant="contained" size="small"><SaveIcon fontSize="small" sx={{ marginRight: '8px', marginBottom: '4px' }} />Gravar</Button>
                             <Button variant="outlined" size="small"><a href="/agendamento">Voltar</a></Button>
+                        </Grid>
+
+                        <Grid item xs={12} style={{ color: "#f00" }}>
+                            {error}
                         </Grid>
 
                     </Grid>

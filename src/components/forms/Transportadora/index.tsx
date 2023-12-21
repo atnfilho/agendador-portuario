@@ -8,21 +8,16 @@ import Title from "@/components/_ui/Title";
 import SaveIcon from '@mui/icons-material/Save';
 import { Button, Grid, Paper, TextField } from "@mui/material";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-type TEndereco = {
-  cep: string,
-  state: string,
-  city: string,
-  neighborhood: string,
-  street: string,
-  service: string
-}
 
 export default function TransportadoraForm() {
 
+  const router = useRouter();
   const [formData, setFormData] = useState({ name: '', cnpj: '', socialrazion: '', cep: '', address: '', number: '', city: '', uf: '' });
   const [loading, updateLoading] = useState(false);
+  const [error, updateError] = useState("");
 
 
   const handleChange = (e: any) => {
@@ -69,10 +64,10 @@ export default function TransportadoraForm() {
       }
 
       await axios.post('/api/transporter', { ...data });
-      setFormData({ name: '', cnpj: '', socialrazion: '', cep: '', address: '', number: '', city: '', uf: '' });
+      router.push('/transportadora');
       
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      updateError(error.message);
     } finally {
       updateLoading(false);
     }
@@ -213,6 +208,10 @@ export default function TransportadoraForm() {
             <Grid item xs={12} style={{ display: 'flex', gap: '20px' }}>
               <Button type="submit" variant="contained" size="small"><SaveIcon fontSize="small" sx={{ marginRight: '8px', marginBottom: '4px' }} />Gravar</Button>
               <Button variant="outlined" size="small"><a href="/transportadora">Voltar</a></Button>
+            </Grid>
+
+            <Grid item xs={12} style={{color: "#f00"}}>
+              {error}
             </Grid>
 
           </Grid>

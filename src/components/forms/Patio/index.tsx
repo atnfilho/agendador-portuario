@@ -5,13 +5,16 @@ import Title from "@/components/_ui/Title";
 import SaveIcon from '@mui/icons-material/Save';
 import { Button, Grid, Paper, TextField } from "@mui/material";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 
 export default function PatioForm() {
 
+  const router = useRouter();
   const [formData, setFormData] = useState({ name: '' });
   const [loading, updateLoading] = useState(false);
+  const [error, updateError] = useState("");
 
   const handleChange = (e: any) => {
     const value = e.target.value;
@@ -28,9 +31,9 @@ export default function PatioForm() {
     try {
       updateLoading(true);
       await axios.post('/api/yard', { ...formData });
-      setFormData({ name: '' });
-    } catch (error) {
-      console.log(error);
+      router.push('/patio');
+    } catch (error: any) {
+      updateError(error.message);
     } finally {
       updateLoading(false);
     }
@@ -66,6 +69,10 @@ export default function PatioForm() {
             <Grid item xs={12} style={{ display: 'flex', gap: '20px' }}>
               <Button type="submit" variant="contained" size="small"><SaveIcon fontSize="small" sx={{ marginRight: '8px', marginBottom: '4px' }} />Gravar</Button>
               <Button variant="outlined" size="small"><a href="/patio">Voltar</a></Button>
+            </Grid>
+
+            <Grid item xs={12} style={{color: "#f00"}}>
+              {error}
             </Grid>
 
           </Grid>
