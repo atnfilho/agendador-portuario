@@ -7,6 +7,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import SetDynamicRoute from '../SetDynamicRoute';
 
 export default function MotivationList() {
 
@@ -31,6 +32,8 @@ export default function MotivationList() {
     return (
         <>
             <BackdropLoader open={loading} />
+            <SetDynamicRoute />
+            
             <div style={{ background: '#fff' }}>
 
                 <Title>Motivações Cadastradas</Title>

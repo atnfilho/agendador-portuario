@@ -4,6 +4,7 @@ import { IconButton, Tooltip } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import DataTableComponent from "../DataTableComponent";
+import SetDynamicRoute from "../SetDynamicRoute";
 import BackdropLoader from "../_ui/BackdropLoader";
 import Title from "../_ui/Title";
 
@@ -30,6 +31,7 @@ export default function ScheduleList() {
     return (
         <>
             <BackdropLoader open={loading} />
+            <SetDynamicRoute />
 
             <div style={{ background: '#fff' }}>
 
