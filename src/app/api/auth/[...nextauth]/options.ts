@@ -1,8 +1,6 @@
-import type { NextAuthOptions } from "next-auth";
-// import GitHubProvider from 'next-auth/providers/github';
-
 import { encrypt } from "@/utils/encryption";
 import { jwtDecode } from "jwt-decode";
+import type { NextAuthOptions } from "next-auth";
 import KeyCloakProvider from "next-auth/providers/keycloak";
 
 

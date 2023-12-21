@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { options } from "../[...nextauth]/options";
 
 export async function GET() {
+
   const session = await getServerSession(options);
 
   if (session) {
@@ -15,9 +16,10 @@ export async function GET() {
     try {
       const resp = await fetch(url, { method: "GET" });
     } catch (err) {
-      console.error(err);
       return new Response(null, { status: 500 });
     }
+
   }
+  
   return new Response(null, { status: 200 });
 }
