@@ -1,66 +1,28 @@
 'use client';
 
-import DataTableComponent from '@/components/DataTableComponent';
-import Title from '@/components/_ui/Title';
-import AddIcon from '@mui/icons-material/Add';
 
-import BackdropLoader from '@/components/_ui/BackdropLoader';
-import { TSchedule } from '@/types/TSchedule';
-import { IconButton, Tooltip } from '@mui/material';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+import ScheduleList from '@/components/ScheduleList';
+import { useSession } from 'next-auth/react';
+
+
+// unauthenticated
+// mostra página inicial
+
+// loading
+// mostra página inicial
+
+// authenticated
+// mostra menu completo
 
 
 
 export default function Home() {
 
-    const [schedules, updateSchedules] = useState<TSchedule[]>([]);
-    const [loading, updateLoading] = useState(true);
+    const { data: session }: any = useSession();
 
-    useEffect(() => {
-        getSchedules();
-    }, []);
-
-    async function getSchedules() {
-        try {
-            const response = await axios.get('/api/schedule');
-            updateSchedules(response.data);
-
-        } catch (error) {
-            console.log(error);
-        } finally {
-            updateLoading(false);
-        }
+    if (session) {
+        return (
+            <ScheduleList />
+        )
     }
-
-    return (
-        <>
-            <BackdropLoader open={loading} />
-            
-            <div style={{ background: '#fff' }}>
-
-                <Title>Agendamentos Cadastrados</Title>
-
-                <div style={{ width: '95%', margin: 'auto', padding: '20px 0 40px' }}>
-
-                    {!loading && <div style={{ textAlign: 'right', position: 'absolute', top: '150px', zIndex: 9999 }}>
-                        <a href="/agendamento/cadastro">
-                            <Tooltip title="Adicionar" placement="right">
-                                <IconButton color="primary" sx={{ boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px' }}>
-                                    <AddIcon />
-                                </IconButton>
-                            </Tooltip>
-                        </a>
-                    </div>}
-
-                    <DataTableComponent data={schedules} loading={loading} />
-                </div>
-
-
-            </div>
-
-        </>
-    )
 }
-
-

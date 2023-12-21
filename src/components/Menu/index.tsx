@@ -8,23 +8,16 @@ export default function Menu() {
 
     const { data: session, status } = useSession();
 
-    const renderMenu = () => {
-        if (status === "loading") {
-            return <></>
-        } else if (session) {
-            return (
-                <>
-                    <li className={styles.menu_item}><a href="/agendamento">Agendamentos</a></li>
-                    <li className={styles.menu_item}><a href="/motivacao">Motivações</a></li>
-                    <li className={styles.menu_item}><a href="/patio">Pátios</a></li>
-                    <li className={styles.menu_item}><a href="/transportadora">Transportadoras</a></li>
-                    <li className={styles.menu_item}><a href="/veiculo">Veículos</a></li>
-                </>
-            )
-        } else {
-            return <></>
-        }
-    }
+    // unauthenticated
+    // mostra página inicial
+
+    // loading
+    // mostra página inicial
+
+    // authenticated
+    // mostra menu completo
+
+
 
     return (
         <>
@@ -33,8 +26,19 @@ export default function Menu() {
             </div>
             <ul>
                 <li className={styles.menu_item}><a href="/"><HomeIcon />Página Inicial</a></li>
-                {renderMenu()}
+                {session && (
+                    <>
+                        <li className={styles.menu_item}><a href="/agendamento">Agendamentos</a></li>
+                        <li className={styles.menu_item}><a href="/motivacao">Motivações</a></li>
+                        <li className={styles.menu_item}><a href="/patio">Pátios</a></li>
+                        <li className={styles.menu_item}><a href="/transportadora">Transportadoras</a></li>
+                        <li className={styles.menu_item}><a href="/veiculo">Veículos</a></li>
+                    </>
+                )
+                }
             </ul>
         </>
     )
+
 }
+

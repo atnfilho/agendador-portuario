@@ -11,23 +11,14 @@ export default function Home() {
     const router = useRouter();
 
     useEffect(() => {
-        if (status === "unauthenticated" ||
-            (status === "authenticated" && !session?.roles.includes("Administrator"))) {
+        if (status === "authenticated" && !session?.roles.includes("Administrator")) {
             router.push("/unauthorized");
         }
     }, [session, router, status])
 
 
-    if (status === "loading") {
-        return <></>
-    }
-
     if (session && session.roles.includes("Administrator")) {
-        return (
-            <>
-                <MotivacaoForm />
-            </>
-        )
+        return <MotivacaoForm />
     }
 
 
