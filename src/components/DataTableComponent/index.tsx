@@ -91,7 +91,6 @@ const columns = [
 
 export default function DataTableComponent({ data, loading }: any) {
 
-    console.log({data})
     const [filterText, setFilterText] = useState('');
     const filteredItems = data.filter(
         (item: any) => {

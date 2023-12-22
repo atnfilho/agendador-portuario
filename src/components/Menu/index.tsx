@@ -8,17 +8,6 @@ export default function Menu() {
 
     const { data: session, status } = useSession();
 
-    // unauthenticated
-    // mostra página inicial
-
-    // loading
-    // mostra página inicial
-
-    // authenticated
-    // mostra menu completo
-
-
-
     return (
         <>
             <div style={{ padding: '10px' }}>

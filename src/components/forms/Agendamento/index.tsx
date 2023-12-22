@@ -41,7 +41,12 @@ const validate = (values: any) => {
     return errors;
 }
 
-export default function AgendamentoForm() {
+
+type Props = {
+    user: string
+}
+
+export default function AgendamentoForm({ user }: Props) {
 
     const router = useRouter();
     const [loading, updateLoading] = useState(true);
@@ -59,7 +64,6 @@ export default function AgendamentoForm() {
         initialValues: {
             motivation: "",
             yard: "",
-            user_id: "",
             transporter: "",
             driver_cpf: "",
             vehicle_type: "",
@@ -83,7 +87,7 @@ export default function AgendamentoForm() {
         validate,
         onSubmit: async (values, { resetForm }) => {
             const { containeres, ...obj } = values;
-            const data = { ...obj, ...containeres };
+            const data = { ...obj, ...containeres, user_id: user };
             await saveSchedule(data, resetForm);
         }
     })
@@ -96,7 +100,7 @@ export default function AgendamentoForm() {
             await getTransporterList();
             updateLoading(false);
         }
-        loadSelectsOptions()
+        loadSelectsOptions();
     }, []);
 
     useEffect(() => {
@@ -241,9 +245,9 @@ export default function AgendamentoForm() {
                                 label="Usuário"
                                 size="small"
                                 name="user_id"
-                                onChange={formik.handleChange}
                                 fullWidth
                                 disabled
+                                value={user}
                             />
                         </Grid>
 
@@ -403,6 +407,8 @@ export default function AgendamentoForm() {
 
                 </form>
             </Paper>
+
+            <pre>{JSON.stringify(formik.values, null, 4)}</pre>
 
         </section>
     )

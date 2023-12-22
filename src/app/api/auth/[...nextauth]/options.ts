@@ -4,7 +4,6 @@ import type { NextAuthOptions } from "next-auth";
 import KeyCloakProvider from "next-auth/providers/keycloak";
 
 
-
 export const options: NextAuthOptions = {
     providers: [
 
@@ -21,6 +20,7 @@ export const options: NextAuthOptions = {
 
             if (account) {
                 token.decoded = jwtDecode(account.access_token as string);
+                token.access_token = account.access_token;
                 token.id_token = account.id_token;
                 token.expires_at = account.expires_at;
                 token.refresh_token = account.refresh_token;
@@ -35,7 +35,8 @@ export const options: NextAuthOptions = {
         },
         async session({ session, token }: any) {
             // send properties to the client
-            session.access_token = encrypt(token.decoded);
+            session.token_decoded = encrypt(token.decoded);
+            session.access_token = token.access_token;
             session.id_token = encrypt(token.id_token);
             session.roles = token.decoded.realm_access.roles;
             return session;
