@@ -408,7 +408,7 @@ export default function AgendamentoForm({ user }: Props) {
                 </form>
             </Paper>
 
-            <pre>{JSON.stringify(formik.values, null, 4)}</pre>
+            {/* <pre>{JSON.stringify(formik.values, null, 4)}</pre> */}
 
         </section>
     )
