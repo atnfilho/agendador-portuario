@@ -1,9 +1,21 @@
+"use client";
 
-export default function Home() {
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+
+function Home() {
+
+   const router = useRouter();
+
+   useEffect(() => {
+      router.push('/agendamento');
+   }, []);
 
    return (
-    <h2>Bem vindo ao agendador portuário.</h2>
+      <h2></h2>
    )
 
 }
 
+
+export default Home;

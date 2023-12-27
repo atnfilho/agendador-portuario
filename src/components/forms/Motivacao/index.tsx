@@ -3,7 +3,7 @@
 import BackdropLoader from "@/components/_ui/BackdropLoader";
 import Title from "@/components/_ui/Title";
 import SaveIcon from '@mui/icons-material/Save';
-import { Button, Grid, Paper, TextField } from "@mui/material";
+import { Button, Checkbox, FormControlLabel, FormGroup, Grid, Paper, TextField } from "@mui/material";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -11,13 +11,13 @@ import { useState } from "react";
 export function MotivacaoForm() {
 
   const router = useRouter();
-  const [formData, setFormData] = useState({ name: '', code: '', description: '' });
+  const [formData, setFormData] = useState({ name: '', code: '', description: '', transporter_is_needed: false });
   const [loading, updateLoading] = useState(false);
   const [error, updateError] = useState("");
 
   const handleChange = (e: any) => {
-    const value = e.target.value;
-    setFormData({ ...formData, [e.target.name]: value });
+    const {value, type, name, checked} = e.target;
+    setFormData(prevState => ({ ...prevState, [name]: type === 'checkbox' ? checked : value }));
   }
 
   const handleSubmit = async (e: any) => {
@@ -87,12 +87,25 @@ export function MotivacaoForm() {
               />
             </Grid>
 
+            <Grid item xs={12}>
+              <FormGroup>
+                <FormControlLabel
+                  control={<Checkbox />}
+                  label="Transportadora Requerida"
+                  name="transporter_is_needed"
+                  onChange={handleChange}
+                  checked={formData.transporter_is_needed}
+                  value={formData.transporter_is_needed}
+                />
+              </FormGroup>
+            </Grid>
+
             <Grid item xs={12} style={{ display: 'flex', gap: '20px' }}>
               <Button type="submit" variant="contained" size="small"><SaveIcon fontSize="small" sx={{ marginRight: '8px', marginBottom: '4px' }} />Gravar</Button>
               <Button variant="outlined" size="small"><a href="/motivacao">Voltar</a></Button>
             </Grid>
 
-            <Grid item xs={12} style={{color: "#f00"}}>
+            <Grid item xs={12} style={{ color: "#f00" }}>
               {error}
             </Grid>
 
@@ -100,6 +113,7 @@ export function MotivacaoForm() {
 
         </form>
       </Paper>
+
 
     </section>
   )

@@ -1,10 +1,9 @@
 "use client";
 
 import Menu from "@/components/Menu";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import styles from "./Body.module.css";
 
-import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 
 import BackdropLoader from "@/components/_ui/BackdropLoader";
@@ -29,54 +28,29 @@ export default function Body({ children }: any) {
 
 
     const renderLoginStatus = () => {
-        if(status === "loading") {
-            return <></>
-        } else if (session) {
-            return (
-                <>
-                    <div>
-                        <Button
-                            size="small"
-                            variant="contained"
-                            style={{ background: 'rgba(0,0,0,0.3)', color: '#fff' }}
-                            onClick={() => {
-                                keycloakSessionLogout().then(() => signOut({ callbackUrl: '/' }));
-                            }}
-                        >
-                            LOGOUT
-                            <LogoutIcon style={{ color: '#fff', marginLeft: '0.5rem' }} />
-                        </Button>
-                    </div>
-                    <div>
-                        <p>{session.user?.name}</p>
-                        <p>{session.user?.email}</p>
-                    </div>
-                </>
-            )
-        } else {
-            return (
-                <>
-                    <div>
-                        <Button
-                            size="small"
-                            variant="contained"
-                            style={{ background: 'rgba(0,0,0,0.3)', color: '#fff' }}
-                            onClick={() => {
-                                signIn('keycloak');
-                            }}
-                        >
-                            LOGIN
-                            <LoginIcon style={{ color: '#fff', marginLeft: '0.5rem' }} />
-                        </Button>
-                    </div>
-                    <div>
-                        <p>Usuário não logado.</p>
-                    </div>
-                </>
-            )
 
-        }
-
+        return (
+            <>
+                <div>
+                    <Button
+                        size="small"
+                        variant="contained"
+                        style={{ background: 'rgba(0,0,0,0.3)', color: '#fff' }}
+                        onClick={() => {
+                            keycloakSessionLogout().then(() => signOut({ callbackUrl: '/' }));
+                        }}
+                    >
+                        LOGOUT
+                        <LogoutIcon style={{ color: '#fff', marginLeft: '0.5rem' }} />
+                    </Button>
+                </div>
+                <div>
+                    <p>{session?.user?.name}</p>
+                    <p>{session?.user?.email}</p>
+                </div>
+            </>
+        )
+        
     }
 
     return (
