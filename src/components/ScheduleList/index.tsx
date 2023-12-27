@@ -2,6 +2,7 @@ import { TSchedule } from "@/types/TSchedule";
 import AddIcon from '@mui/icons-material/Add';
 import { IconButton, Tooltip } from "@mui/material";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import DataTableComponent from "../DataTableComponent";
 import SetDynamicRoute from "../SetDynamicRoute";
@@ -12,6 +13,7 @@ export default function ScheduleList() {
 
     const [schedules, updateSchedules] = useState<TSchedule[]>([]);
     const [loading, updateLoading] = useState(true);
+    const { data: session } = useSession();
 
     useEffect(() => {
         getSchedules();
@@ -39,23 +41,40 @@ export default function ScheduleList() {
 
                 <div style={{ width: '95%', margin: 'auto', padding: '20px 0 40px' }}>
 
-                    {!loading && <div style={{ textAlign: 'right', position: 'absolute', top: '150px', zIndex: 9999 }}>
-                        <a href="/agendamento/cadastro">
-                            <Tooltip title="Adicionar" placement="right">
-                                <IconButton color="primary" sx={{ boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px' }}>
-                                    <AddIcon />
-                                </IconButton>
-                            </Tooltip>
-                        </a>
-                    </div>}
+                    <Register loading={loading} isAuthorized={session?.roles?.includes('Administrator')} />
 
                     <DataTableComponent data={schedules} loading={loading} />
                 </div>
-
-
             </div>
-
         </>
     )
 
+}
+
+type Props = {
+    isAuthorized: boolean | undefined,
+    loading: boolean
+}
+
+function Register({ isAuthorized, loading }: Props) {
+
+    if(loading) {
+        return <></>
+    }
+
+    if(!isAuthorized) {
+        return <></>
+    }
+
+    return (
+        <div style={{ textAlign: 'right', position: 'absolute', top: '150px', zIndex: 9999 }}>
+            <a href="/agendamento/cadastro">
+                <Tooltip title="Adicionar" placement="right">
+                    <IconButton color="primary" sx={{ boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px' }}>
+                        <AddIcon />
+                    </IconButton>
+                </Tooltip>
+            </a>
+        </div>
+    )
 }

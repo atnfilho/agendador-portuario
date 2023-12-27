@@ -8,6 +8,7 @@ import { TTransporter } from "@/types/TTransporter";
 import AddIcon from '@mui/icons-material/Add';
 import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip } from "@mui/material";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import SetDynamicRoute from "../SetDynamicRoute";
 
@@ -15,6 +16,7 @@ export default function TransporterList() {
 
     const [transporters, updateTransporters] = useState<TTransporter[]>([]);
     const [loading, updateLoading] = useState(true);
+    const { data: session } = useSession();
 
     useEffect(() => {
         getTransporters();
@@ -43,15 +45,7 @@ export default function TransporterList() {
 
                 <div style={{ width: '95%', margin: 'auto', padding: '20px 0 40px' }}>
 
-                    <div style={{ textAlign: 'right' }}>
-                        <a href="/transportadora/cadastro">
-                            <Tooltip title="Adicionar" placement="right">
-                                <IconButton color="primary" sx={{ boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px' }}>
-                                    <AddIcon />
-                                </IconButton>
-                            </Tooltip>
-                        </a>
-                    </div>
+                    <Register isAuthorized={session?.roles?.includes('Administrator')} />
 
                     <TableContainer>
                         <Table sx={{ minWidth: 650 }} aria-label="simple table" size="small">
@@ -85,5 +79,30 @@ export default function TransporterList() {
 
             </div>
         </>
+    )
+}
+
+
+
+type Props = {
+    isAuthorized: boolean | undefined
+}
+
+function Register({ isAuthorized }: Props) {
+
+    if (!isAuthorized) {
+        return <></>
+    }
+
+    return (
+        <div style={{ textAlign: 'right' }}>
+            <a href="/transportadora/cadastro">
+                <Tooltip title="Adicionar" placement="right">
+                    <IconButton color="primary" sx={{ boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px' }}>
+                        <AddIcon />
+                    </IconButton>
+                </Tooltip>
+            </a>
+        </div>
     )
 }

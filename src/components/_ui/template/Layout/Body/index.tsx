@@ -7,7 +7,7 @@ import styles from "./Body.module.css";
 import LogoutIcon from '@mui/icons-material/Logout';
 
 import BackdropLoader from "@/components/_ui/BackdropLoader";
-import { Button } from "@mui/material";
+import { Button, Tooltip } from "@mui/material";
 import { useState } from "react";
 
 export default function Body({ children }: any) {
@@ -29,28 +29,30 @@ export default function Body({ children }: any) {
 
     const renderLoginStatus = () => {
 
-        return (
-            <>
-                <div>
-                    <Button
-                        size="small"
-                        variant="contained"
-                        style={{ background: 'rgba(0,0,0,0.3)', color: '#fff' }}
-                        onClick={() => {
-                            keycloakSessionLogout().then(() => signOut({ callbackUrl: '/' }));
-                        }}
-                    >
-                        LOGOUT
-                        <LogoutIcon style={{ color: '#fff', marginLeft: '0.5rem' }} />
-                    </Button>
-                </div>
-                <div>
-                    <p>{session?.user?.name}</p>
-                    <p>{session?.user?.email}</p>
-                </div>
-            </>
-        )
-        
+        if (session) {
+            return (
+                <>
+                    <div>
+                        <Button
+                            size="small"
+                            variant="contained"
+                            style={{ background: 'rgba(0,0,0,0.3)', color: '#fff' }}
+                            onClick={() => {
+                                keycloakSessionLogout().then(() => signOut({ callbackUrl: '/' }));
+                            }}
+                        >
+                            <Tooltip title="Logout">
+                                <LogoutIcon style={{ color: '#fff', marginLeft: '0.5rem', fontSize: '0.9rem' }} />
+                            </Tooltip>
+                        </Button>
+                    </div>
+                    <div>
+                        <p>{session?.user?.name}</p>
+                        <p>{session?.user?.email}</p>
+                    </div>
+                </>
+            )
+        }
     }
 
     return (
