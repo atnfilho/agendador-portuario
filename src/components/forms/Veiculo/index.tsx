@@ -133,7 +133,7 @@ export default function VeiculoForm() {
 
 
 
-                        <Grid item xs={1}>
+                        <Grid item xs={2} sm={1}>
                             <h2 style={{ color: '#cecece', margin: '10px 0' }}>Containeres</h2>
                             <TextField
                                 // label="Nome"
@@ -150,7 +150,7 @@ export default function VeiculoForm() {
                         </Grid>
 
                         <Grid item xs={12} style={{ display: 'flex', gap: '20px' }}>
-                            <Button type="submit" variant="contained" size="small"><SaveIcon fontSize="small" sx={{ marginRight: '8px', marginBottom: '4px' }} />Gravar</Button>
+                            <Button type="submit" variant="contained" size="small" startIcon={<SaveIcon />}>Gravar</Button>
                             <Button variant="outlined" size="small"><a href="/veiculo">Voltar</a></Button>
                         </Grid>
 

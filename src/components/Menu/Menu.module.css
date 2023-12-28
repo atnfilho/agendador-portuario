@@ -1,8 +1,14 @@
+.menu_title {
+    padding: 10px;
+    font-weight: 600;;
+}
+
 .menu_item {
-    background: #fff;
+    background: var(--palette-color-snow);
     font-weight: 500;  
-    border-bottom: 1px solid #ccc;
-    margin-bottom: 2px;
+    /* border-bottom: 1px solid #ccc; */
+    margin-bottom: 4px;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 
 .menu_item:hover {

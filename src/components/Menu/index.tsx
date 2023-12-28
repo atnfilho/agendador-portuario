@@ -6,7 +6,7 @@ export default function Menu() {
 
     return (
         <>
-            <div style={{ padding: '10px' }}>
+            <div className={styles.menu_title}>
                 Menu
             </div>
             <ul>
