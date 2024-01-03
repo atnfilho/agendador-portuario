@@ -54,6 +54,7 @@ export default function AgendamentoForm({ user }: Props) {
     const [vehicleTypeList, updateVehicleTypeList] = useState<TVehicle[]>([]);
     const [yardList, updateYardList] = useState<TYard[]>([]);
     const [transporterList, updateTransporterList] = useState<TTransporter[]>([]);
+    const [motivationHasTransporter, updateMotivationHasTransporter] = useState(true);
     const [error, updateError] = useState("");
 
     const [dataInicio, updateDataInicio] = useState<string | null>(null);
@@ -107,6 +108,11 @@ export default function AgendamentoForm({ user }: Props) {
         formik.setFieldValue('schedule_window_start', dataInicio);
         formik.setFieldValue('schedule_window_end', dataFim);
     }, [dataInicio, dataFim]);
+
+    useEffect(() => {
+        if(formik.values.motivation === "") return;
+        updateMotivationHasTransporter(motivationList[Number(formik.values.motivation) - 1].transporterRequired);
+    }, [formik.values.motivation, motivationList]);
 
 
     const handleChangeContaineres = (e: any) => {
@@ -174,6 +180,7 @@ export default function AgendamentoForm({ user }: Props) {
     })[0];
 
 
+
     return (
         <section style={{ position: 'relative', background: '#fff', boxShadow: 'var(--box-shadow)', borderRadius: 'var(--border-radius)' }}>
 
@@ -205,8 +212,7 @@ export default function AgendamentoForm({ user }: Props) {
                                 >
                                     {motivationList?.map((item: TMotivation) => {
                                         return (
-                                            <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
-
+                                            <MenuItem key={item.id} value={item.id}>{`(${item.code}) ${item.name}`}</MenuItem>
                                         )
                                     })}
                                 </Select>
@@ -251,27 +257,28 @@ export default function AgendamentoForm({ user }: Props) {
                             />
                         </Grid>
 
-                        <Grid item xs={6}>
-                            <FormControl fullWidth size="small">
-                                <InputLabel>Transportadora</InputLabel>
-                                <Select
-                                    label="Transportadora"
-                                    name="transporter"
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    value={formik.values.transporter}
-                                    required
-                                >
-                                    {transporterList.map((item: TTransporter) => {
-                                        return (
-                                            <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
+                        {motivationHasTransporter &&
+                            <Grid item xs={6}>
+                                <FormControl fullWidth size="small">
+                                    <InputLabel>Transportadora</InputLabel>
+                                    <Select
+                                        label="Transportadora"
+                                        name="transporter"
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                        value={formik.values.transporter}
+                                        required
+                                    >
+                                        {transporterList.map((item: TTransporter) => {
+                                            return (
+                                                <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
 
-                                        )
-                                    })}
-                                </Select>
-                                {formik.touched.transporter && formik.errors.transporter ? <div style={{ margin: '5px 5px 0', fontSize: '0.8rem', color: '#f00' }}>{formik.errors.transporter}</div> : null}
-                            </FormControl>
-                        </Grid>
+                                            )
+                                        })}
+                                    </Select>
+                                    {formik.touched.transporter && formik.errors.transporter ? <div style={{ margin: '5px 5px 0', fontSize: '0.8rem', color: '#f00' }}>{formik.errors.transporter}</div> : null}
+                                </FormControl>
+                            </Grid>}
 
                         <Grid item xs={3}>
                             <TextField
@@ -408,7 +415,7 @@ export default function AgendamentoForm({ user }: Props) {
                 </form>
             </Paper>
 
-            {/* <pre>{JSON.stringify(formik.values, null, 4)}</pre> */}
+            {/* <pre>{JSON.stringify(formik.values.motivation, null, 4)}</pre> */}
 
         </section>
     )
