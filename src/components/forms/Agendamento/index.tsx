@@ -54,7 +54,7 @@ export default function AgendamentoForm({ user }: Props) {
     const [vehicleTypeList, updateVehicleTypeList] = useState<TVehicle[]>([]);
     const [yardList, updateYardList] = useState<TYard[]>([]);
     const [transporterList, updateTransporterList] = useState<TTransporter[]>([]);
-    const [motivationHasTransporter, updateMotivationHasTransporter] = useState(true);
+    const [motivationHasTransporter, updateMotivationHasTransporter] = useState(false);
     const [error, updateError] = useState("");
 
     const [dataInicio, updateDataInicio] = useState<string | null>(null);
