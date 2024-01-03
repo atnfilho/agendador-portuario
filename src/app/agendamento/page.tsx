@@ -2,7 +2,7 @@
 
 import ScheduleList from '@/components/ScheduleList';
 
-export default function Home() {
+export default function Agendamento() {
     return (
         <ScheduleList />
     )

@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export default function Home() {
+function CadastroVeiculo() {
 
     const { data: session, status }: any = useSession();
     const router = useRouter();
@@ -21,5 +21,7 @@ export default function Home() {
         return <VeiculoForm />
     }
 
-
 }
+
+
+export default CadastroVeiculo;

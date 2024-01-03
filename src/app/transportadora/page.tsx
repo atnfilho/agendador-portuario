@@ -2,7 +2,7 @@
 
 import TransporterList from "@/components/TransporterList";
 
-export default function Home() {
+export default function Transportadora() {
     return (
         <TransporterList />
     )

@@ -1,6 +1,6 @@
 'use client';
 
-import { formataDataPadraoBR } from '@/commom/formatters';
+import { formataDataHoraPadraoBR } from '@/commom/formatters';
 import { useMemo, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import FilterComponent from './FilterComponent';
@@ -95,8 +95,8 @@ export default function DataTableComponent({ data, loading }: any) {
     const filteredItems = data.filter(
         (item: any) => {
 
-            const dataInicioFormatada = formataDataPadraoBR(item.schedule_window_start);
-            const dataFimFormatada = formataDataPadraoBR(item.schedule_window_end);
+            const dataInicioFormatada = formataDataHoraPadraoBR(item.schedule_window_start);
+            const dataFimFormatada = formataDataHoraPadraoBR(item.schedule_window_end);
 
             return dataInicioFormatada && dataInicioFormatada.includes(filterText.toLowerCase())
                 || dataFimFormatada && dataFimFormatada.toLowerCase().includes(filterText.toLowerCase())

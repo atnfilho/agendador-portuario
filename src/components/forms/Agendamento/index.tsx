@@ -1,7 +1,6 @@
 'use client';
 
 import { cpfMask } from "@/commom/masks";
-import { validarCPF } from "@/commom/validaters";
 import BasicDateTimePicker from "@/components/BasicDatePicker";
 import BackdropLoader from "@/components/_ui/BackdropLoader";
 import Subtitle from "@/components/_ui/Subtitle";
@@ -16,13 +15,14 @@ import axios from "axios";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { isCPF } from "validation-br";
 import Containeres from "./Conteineres";
 
 const validate = (values: any) => {
     const errors: any = {};
 
-    if (!validarCPF(values.driver_cpf)) {
-        errors.driver_cpf = 'CPF inválido';
+    if (!isCPF(values.driver_cpf)) {
+        errors.driver_cpf = 'CPF inválido.';
     }
 
     if (values.schedule_window_start >= values.schedule_window_end) {

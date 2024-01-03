@@ -2,7 +2,7 @@
 
 import YardList from "@/components/YardList";
 
-export default function Home() {
+export default function Patio() {
     return (
         <YardList />
     )

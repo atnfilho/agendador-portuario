@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function Home() {
+function CadastroAgendamento() {
 
     const { data: session, status }: any = useSession();
     const router = useRouter();
@@ -24,3 +24,5 @@ export default function Home() {
     }
 
 }
+
+export default CadastroAgendamento;

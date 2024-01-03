@@ -1,17 +1,38 @@
 'use client';
 
+import { formataDataPadraoBR } from '@/commom/formatters';
+import { cpfMask } from '@/commom/masks';
 import BackdropLoader from '@/components/_ui/BackdropLoader';
 import Title from '@/components/_ui/Title';
+import { TDriver } from '@/types/TDriver';
 import AddIcon from '@mui/icons-material/Add';
 import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip } from '@mui/material';
+import axios from 'axios';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SetDynamicRoute from '../SetDynamicRoute';
 
 export default function DriversList() {
 
-    const [loading, updateLoading] = useState(false);
+    const [drivers, updateDrivers] = useState<Array<TDriver>>([])
+    const [loading, updateLoading] = useState(true);
     const { data: session } = useSession();
+
+
+    useEffect(() => {
+        getMotivations();
+    }, []);
+
+    async function getMotivations() {
+        try {
+            const response = await axios.get('/api/driver');
+            updateDrivers(response.data);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            updateLoading(false);
+        }
+    }
 
 
     return (
@@ -25,7 +46,7 @@ export default function DriversList() {
 
                 <div style={{ width: '95%', margin: 'auto', padding: '20px 0 40px' }}>
 
-                    <Register isAuthorized={ session?.roles?.includes('Administrator') } />
+                    <Register isAuthorized={session?.roles?.includes('Administrator')} />
 
                     <TableContainer>
                         <Table sx={{ minWidth: 650 }} aria-label="simple table" size="small">
@@ -33,11 +54,20 @@ export default function DriversList() {
                                 <TableRow>
                                     <TableCell sx={{ fontWeight: 'bold' }}>Nome</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold' }}>CPF</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}>Nº CNH</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold' }}>Validade CNH</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                
+                                {drivers.map((item: TDriver, index: number) => (
+                                    <TableRow key={item.code}>
+                                        <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.name}</TableCell>
+                                        <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{cpfMask(item.code)}</TableCell>
+                                        <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.cnh}</TableCell>
+                                        <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{formataDataPadraoBR(item.cnhValidate)}</TableCell>
+                                    </TableRow>
+
+                                ))}
                             </TableBody>
                         </Table>
                     </TableContainer>

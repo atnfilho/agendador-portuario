@@ -2,7 +2,6 @@
 
 import { onlyNumbers } from "@/commom/formatters";
 import { cepMask, cnpjMask } from "@/commom/masks";
-import { validarCNPJ } from "@/commom/validaters";
 import BackdropLoader from "@/components/_ui/BackdropLoader";
 import Title from "@/components/_ui/Title";
 import SaveIcon from '@mui/icons-material/Save';
@@ -10,6 +9,7 @@ import { Button, Grid, Paper, TextField } from "@mui/material";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { isCNPJ } from "validation-br";
 
 
 export default function TransportadoraForm() {
@@ -23,7 +23,7 @@ export default function TransportadoraForm() {
   const handleChange = (e: any) => {
     let { name, value } = e.target;
 
-    if(["number", "cep", "cnpj"].includes(name)) value = onlyNumbers(value);
+    if (["number", "cep", "cnpj"].includes(name)) value = onlyNumbers(value);
 
     setFormData({ ...formData, [name]: value });
 
@@ -37,7 +37,7 @@ export default function TransportadoraForm() {
 
   const validate = () => {
 
-    if(!validarCNPJ(formData.cnpj)) {
+    if (!isCNPJ(formData.cnpj)) {
       alert('CNPJ inválido!');
       return false;
     }
@@ -49,7 +49,7 @@ export default function TransportadoraForm() {
 
   const saveTransporter = async () => {
 
-    if(!validate()) return;
+    if (!validate()) return;
 
     try {
       updateLoading(true);
@@ -65,7 +65,7 @@ export default function TransportadoraForm() {
 
       await axios.post('/api/transporter', { ...data });
       router.push('/transportadora');
-      
+
     } catch (error: any) {
       updateError(error.message);
     } finally {
@@ -196,7 +196,7 @@ export default function TransportadoraForm() {
                 label="UF"
                 size="small"
                 name="uf"
-                inputProps={{ maxLength: 2, style: {textTransform: 'uppercase'} }}
+                inputProps={{ maxLength: 2, style: { textTransform: 'uppercase' } }}
                 value={formData.uf}
                 onChange={handleChange}
                 fullWidth
@@ -210,7 +210,7 @@ export default function TransportadoraForm() {
               <Button variant="outlined" size="small"><a href="/transportadora">Voltar</a></Button>
             </Grid>
 
-            <Grid item xs={12} style={{color: "#f00"}}>
+            <Grid item xs={12} style={{ color: "#f00" }}>
               {error}
             </Grid>
 

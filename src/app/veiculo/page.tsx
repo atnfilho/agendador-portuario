@@ -2,7 +2,7 @@
 
 import VehicleList from "@/components/VehicleList";
 
-export default function Home() {
+export default function Veiculo() {
     return (
         <VehicleList />
     )

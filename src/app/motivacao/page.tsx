@@ -2,7 +2,7 @@
 
 import MotivationList from '@/components/MotivationList';
 
-export default function Home() {
+export default function Motivacao() {
     return (
         <MotivationList />
     )
