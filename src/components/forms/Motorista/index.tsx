@@ -199,8 +199,6 @@ export function MotoristaForm() {
                 </form>
             </Paper>
 
-            <pre>{JSON.stringify(formik.values, null, 2)}</pre>
-
         </section>
     )
 }
