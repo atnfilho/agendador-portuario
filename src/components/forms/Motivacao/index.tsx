@@ -11,7 +11,7 @@ import { useState } from "react";
 export function MotivacaoForm() {
 
   const router = useRouter();
-  const [formData, setFormData] = useState({ name: '', code: '', description: '', transporter_is_needed: false });
+  const [formData, setFormData] = useState({ name: '', code: '', description: '', transporterRequired: false });
   const [loading, updateLoading] = useState(false);
   const [error, updateError] = useState("");
 
@@ -92,10 +92,10 @@ export function MotivacaoForm() {
                 <FormControlLabel
                   control={<Checkbox />}
                   label="Transportadora Requerida"
-                  name="transporter_is_needed"
+                  name="transporterRequired"
                   onChange={handleChange}
-                  checked={formData.transporter_is_needed}
-                  value={formData.transporter_is_needed}
+                  checked={formData.transporterRequired}
+                  value={formData.transporterRequired}
                 />
               </FormGroup>
             </Grid>
@@ -113,7 +113,6 @@ export function MotivacaoForm() {
 
         </form>
       </Paper>
-
 
     </section>
   )

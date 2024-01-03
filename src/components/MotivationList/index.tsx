@@ -48,17 +48,19 @@ export default function MotivationList() {
                         <Table sx={{ minWidth: 650 }} aria-label="simple table" size="small">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Sigla</TableCell>
+                                    <TableCell align='center' sx={{ fontWeight: 'bold' }}>Sigla</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold' }}>Nome</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold' }}>Descrição</TableCell>
+                                    <TableCell align='center' sx={{ fontWeight: 'bold' }}>Transportadora</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {motivations.map((item: TMotivation, index: number) => (
                                     <TableRow key={item.id}>
-                                        <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.code}</TableCell>
+                                        <TableCell align='center' sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.code}</TableCell>
                                         <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.name}</TableCell>
                                         <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.description}</TableCell>
+                                        <TableCell align='center' sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.transporterRequired ? 'SIM' : 'NÃO'}</TableCell>
                                     </TableRow>
 
                                 ))}
