@@ -21,7 +21,11 @@ const DriverService = {
     },
     save: async (data: any) => {
         try {
-            const response = await axiosDefault.post(`/driver`, { ...data });
+            const response = await axiosDefault.post(`/driver`, { ...data }, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
             return response.data;
         } catch (error: any) {
 

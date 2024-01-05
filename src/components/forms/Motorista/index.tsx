@@ -4,14 +4,17 @@ import { onlyNumbers } from "@/commom/formatters";
 import { cpfMask } from "@/commom/masks";
 import BackdropLoader from "@/components/_ui/BackdropLoader";
 import Title from "@/components/_ui/Title";
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import SaveIcon from '@mui/icons-material/Save';
 import { Button, Grid, Paper, TextField } from "@mui/material";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { isCNH, isCPF } from "validation-br";
 
+
+const imageMimeType = /image\/(png|jpg|jpeg)/i;
 
 const validate = (values: any) => {
     const errors: any = {};
@@ -44,13 +47,14 @@ const validate = (values: any) => {
         errors.cnhValidate = "Validade da CNH não informada."
     }
 
-
     return errors;
 }
 
 export function MotoristaForm() {
 
     const router = useRouter();
+    const [file, updateFile] = useState<any>(null);
+    const [fileDataURL, setFileDataURL] = useState<any>(null);
     const [loading, updateLoading] = useState(false);
     const [error, updateError] = useState("");
 
@@ -59,13 +63,37 @@ export function MotoristaForm() {
             name: "",
             code: "",
             cnh: "",
-            cnhValidate: ""
+            cnhValidate: "",
+            file: ""
         },
         validate,
         onSubmit: async (values, { resetForm }) => {
             await saveDriver(values, resetForm);
         }
     });
+
+    useEffect(() => {
+
+        let fileReader: any, isCancel = false;
+
+        if (file) {
+            const fileReader = new FileReader();
+            fileReader.onload = (e: any) => {
+                const { result } = e.target;
+                if (result && !isCancel) {
+                    setFileDataURL(result);
+                }
+            }
+            fileReader.readAsDataURL(file);
+        }
+
+        return () => {
+            isCancel = true;
+            if (fileReader && fileReader.readyState === 1) {
+                fileReader.abort();
+            }
+        }
+    }, [file])
 
     const saveDriver = async (data: any, resetForm: Function) => {
         try {
@@ -89,15 +117,15 @@ export function MotoristaForm() {
 
             <Title>Cadastro</Title>
 
-            <Paper sx={{ p: 3 }}>
+            <Paper sx={{ p: 3, pb: 0 }}>
 
                 <h3>Novo Motorista</h3>
 
-                <form onSubmit={formik.handleSubmit} style={{ margin: '20px 0' }} >
+                <form encType="multipart/form-data" onSubmit={formik.handleSubmit} style={{ margin: '20px 0' }} >
 
                     <Grid container spacing={2} rowSpacing={3}>
 
-                        <Grid item xs={7}>
+                        <Grid item xs={6}>
                             <TextField
                                 label="Nome"
                                 name="name"
@@ -165,26 +193,51 @@ export function MotoristaForm() {
                         </Grid>
 
 
-                        {/* <Grid item xs={4}>
-                            <Button
-                                variant="outlined"
-                                component="label"
-                                startIcon={<CloudUploadIcon />}
-                            >
-                                Upload Foto do Motorista
-                                <input
-                                    type="file"
-                                    name="photo"
-                                    value={formData.photo}
-                                    onChange={handleChange}
-                                    hidden
-                                />
-                            </Button>
-                        </Grid> */}
+                        <Grid item xs={12}>
+
+                            <div style={{ border: '1px solid #cecece', background: '#F0F0F0', borderRadius: '4px', textAlign: 'center' }}>
+
+                                <div style={{margin: '20px 0 0'}}>
+                                    <img style={{ maxHeight: '200px', maxWidth: '200px', width: 'auto', objectFit: 'contain' }} src={fileDataURL} alt="" />
+                                </div>
+
+                                <label htmlFor="upload-photo">
+                                    <input
+                                        type="file"
+                                        name="file"
+                                        accept="image/png, image/jpeg"
+                                        required
+                                        style={{ display: 'none' }}
+                                        id="upload-photo"
+                                        onChange={(e) => {
+                                            const { files } = e.target;
+                                            if (files) {
+                                                const file = files[0];
+                                                if (!file.type.match(imageMimeType)) {
+                                                    alert('Extensão de imagem não é válida.')
+                                                    return;
+                                                }
+                                                updateFile(file);
+                                                formik.handleChange(e);
+                                            }
+                                        }}
+                                    />
+                                    <Button
+                                        color="primary"
+                                        variant="text"
+                                        component="span"
+                                        startIcon={<CloudUploadIcon />}
+                                    >
+                                        Foto do Motorista
+                                    </Button>
+                                </label>
+                                {formik.touched.file && formik.errors.file ? <div style={{ margin: '5px 5px 0', fontSize: '0.8rem', color: '#f00' }}>{formik.errors.file}</div> : null}
+                            </div>
+
+                        </Grid>
 
 
-
-                        <Grid item xs={12} style={{ display: 'flex', gap: '20px' }}>
+                        <Grid item xs={12} style={{ display: 'flex', gap: '20px', margin: '40px 0 10px' }}>
                             <Button type="submit" variant="contained" size="small" startIcon={<SaveIcon />}>Gravar</Button>
                             <Button variant="outlined" size="small"><a href="/motorista">Voltar</a></Button>
                         </Grid>
