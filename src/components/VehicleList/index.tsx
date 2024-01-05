@@ -24,7 +24,7 @@ export default function VehicleList() {
 
     async function getVehicles() {
         try {
-            const response = await axios.get('/api/vehicle?id=1&limit=100');
+            const response = await axios.get('/api/vehicle');
             updateVehicles(response.data);
         } catch (error) {
             console.log(error);

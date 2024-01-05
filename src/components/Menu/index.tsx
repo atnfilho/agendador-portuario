@@ -17,7 +17,7 @@ export default function Menu() {
                 <li className={styles.menu_item}><a href="/transportadora">Transportadoras</a></li>
                 <li className={styles.menu_item}><a href="/veiculo">Tipos de Veículos</a></li>
                 <li className={styles.menu_item}><a href="/motorista">Motoristas</a></li>
-                <li className={styles.menu_item}><a href="/frota">Frota da Casa</a></li>
+                <li className={styles.menu_item}><a href="/frotadacasa">Frota da Casa</a></li>
             </ul>
         </>
     )
