@@ -71,9 +71,9 @@ const columns = [
     },
     {
         name: 'Transportadora',
-        selector: (row: any) => row.transporter.name,
+        selector: (row: any) => row.transporter?.name,
         sortable: true,
-        cell: (row: any) => <div style={{fontSize: 14}}>{row.transporter.name}</div>
+        cell: (row: any) => <div style={{fontSize: 14}}>{row.transporter?.name}</div>
     },
     {
         name: 'Pátio',
@@ -90,6 +90,8 @@ const columns = [
 
 
 export default function DataTableComponent({ data, loading }: any) {
+
+    console.log({data})
 
     const [filterText, setFilterText] = useState('');
     const filteredItems = data.filter(
@@ -112,7 +114,6 @@ export default function DataTableComponent({ data, loading }: any) {
             <FilterComponent onFilter={(e: any) => setFilterText(e.target.value)} filterText={filterText} loading={loading} />
         );
     }, [filterText, loading]);
-
 
 
     return (

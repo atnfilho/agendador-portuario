@@ -1,11 +1,18 @@
-import { TMotivation } from "./TMotivation";
-import { TVehicle } from "./TVehicle";
-import { TYard } from "./TYard";
+import { TDriver } from "./TDriver"
+import { TMotivation } from "./TMotivation"
+import { TTransporter } from "./TTransporter"
+import { TVehicle } from "./TVehicle"
+import { TYard } from "./TYard"
+
 
 export type TSchedule = {
     id: number,
-    user_id: string,
-    driver_cpf: string,
+    motivationId: number,
+    yardId: number,
+    userId: string,
+    transporterId: number,
+    driverId: number,
+    vehicle_typeId: number,
     plate_front: string,
     plate_trailer: string,
     plate_semi_trailer: string,
@@ -20,9 +27,11 @@ export type TSchedule = {
     justify: string,
     schedule_window_start: string,
     schedule_window_end: string,
-    create_at_with_timezone: string,
-    create_at_without_timezone: string,
+    create_at: string,
+    update_at: string,
     yard: TYard,
     motivation: TMotivation,
-    vehicle_type: TVehicle
+    vehicle_type: TVehicle,
+    driver: TDriver,
+    transporter: TTransporter
 }

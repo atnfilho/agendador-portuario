@@ -22,6 +22,7 @@ export default function ScheduleList() {
     async function getSchedules() {
         try {
             const response = await axios.get('/api/schedule');
+            console.log({response})
             updateSchedules(response.data);
         } catch (error) {
             console.log(error);
