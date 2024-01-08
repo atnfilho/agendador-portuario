@@ -1,6 +1,7 @@
 'use client';
 
 import { formataDataHoraPadraoBR } from '@/commom/formatters';
+import InfoIcon from '@mui/icons-material/Info';
 import { useMemo, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import FilterComponent from './FilterComponent';
@@ -60,27 +61,35 @@ const columns = [
         selector: (row: any) => row.vehicle_type.code,
         sortable: true,
         wrap: true,
-        cell: (row: any) => <div style={{fontSize: 14}}>{`(${row.vehicle_type.code}) ${row.vehicle_type.name}`}</div>
+        cell: (row: any) => <div style={{ fontSize: 14 }}>{`(${row.vehicle_type.code}) ${row.vehicle_type.name}`}</div>
     },
     {
         name: 'Motivação',
         selector: (row: any) => row.motivation.code,
         sortable: true,
         wrap: true,
-        cell: (row: any) => <div style={{fontSize: 14}}>{`(${row.motivation.code}) ${row.motivation.name}`}</div>
+        cell: (row: any) => <div style={{ fontSize: 14 }}>{`(${row.motivation.code}) ${row.motivation.name}`}</div>
     },
     {
         name: 'Transportadora',
         selector: (row: any) => row.transporter?.name,
         sortable: true,
-        cell: (row: any) => <div style={{fontSize: 14}}>{row.transporter?.name}</div>
+        cell: (row: any) => <div style={{ fontSize: 14 }}>{row.transporter?.name}</div>
     },
     {
         name: 'Pátio',
         selector: (row: any) => row.yard.id,
         sortable: true,
         wrap: true,
-        cell: (row: any) => <div style={{fontSize: 14}}>{row.yard.name}</div>
+        cell: (row: any) => <div style={{ fontSize: 14 }}>{row.yard.name}</div>
+    },
+    {
+        name: '',
+        cell: (row: any) => <div>
+            <a href={`/agendamento/${row.id}`}>
+                <InfoIcon color='primary' style={{ cursor: 'pointer' }} />
+            </a>
+        </div>
     }
 ];
 
@@ -90,8 +99,6 @@ const columns = [
 
 
 export default function DataTableComponent({ data, loading }: any) {
-
-    console.log({data})
 
     const [filterText, setFilterText] = useState('');
     const filteredItems = data.filter(
