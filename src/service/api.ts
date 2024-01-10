@@ -2,9 +2,7 @@ import axios from "axios";
 import * as https from "https";
 import apiUrl from "../../config";
 
-
-
-const axiosDefault = axios.create({
+const api = axios.create({
   baseURL: `${apiUrl}`,
   timeout: 10 * 10000,
   httpsAgent: new https.Agent({ rejectUnauthorized: false }),
@@ -16,4 +14,4 @@ const axiosDefault = axios.create({
 });
 
 
-export default axiosDefault;
+export default api;

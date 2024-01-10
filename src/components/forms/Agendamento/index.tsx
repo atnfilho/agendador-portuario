@@ -1,10 +1,11 @@
 'use client';
 
-import { cpfMask } from "@/commom/masks";
 import BasicDateTimePicker from "@/components/BasicDatePicker";
 import BackdropLoader from "@/components/_ui/BackdropLoader";
 import Subtitle from "@/components/_ui/Subtitle";
 import Title from "@/components/_ui/Title";
+import api from "@/service/api";
+import { TDriver } from "@/types/TDriver";
 import { TMotivation } from "@/types/TMotivation";
 import { TTransporter } from "@/types/TTransporter";
 import { TVehicle } from "@/types/TVehicle";
@@ -15,15 +16,10 @@ import axios from "axios";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { isCPF } from "validation-br";
 import Containeres from "./Conteineres";
 
 const validate = (values: any) => {
     const errors: any = {};
-
-    if (!isCPF(values.driver_cpf)) {
-        errors.driver_cpf = 'CPF inválido.';
-    }
 
     if (values.schedule_window_start >= values.schedule_window_end) {
         errors.schedule_window_end = 'Data final deve ser maior que a data inicial do agendamento.';
@@ -51,6 +47,7 @@ export default function AgendamentoForm({ user }: Props) {
     const router = useRouter();
     const [loading, updateLoading] = useState(true);
     const [motivationList, updateMotivationList] = useState<TMotivation[]>([]);
+    const [driverList, updateDriverList] = useState<TDriver[]>([]);
     const [vehicleTypeList, updateVehicleTypeList] = useState<TVehicle[]>([]);
     const [yardList, updateYardList] = useState<TYard[]>([]);
     const [transporterList, updateTransporterList] = useState<TTransporter[]>([]);
@@ -63,11 +60,11 @@ export default function AgendamentoForm({ user }: Props) {
 
     const formik = useFormik({
         initialValues: {
-            motivation: "",
-            yard: "",
-            transporter: "",
-            driver_cpf: "",
-            vehicle_type: "",
+            motivationId: "",
+            yardId: "",
+            transporterId: "",
+            driverId: "",
+            vehicle_typeId: "",
             containeres: {
                 container1: "",
                 container1iso: "",
@@ -96,6 +93,7 @@ export default function AgendamentoForm({ user }: Props) {
     useEffect(() => {
         const loadSelectsOptions = async () => {
             await getMotivationList();
+            await getDriverList();
             await getVehicleTypeList();
             await getYardList();
             await getTransporterList();
@@ -110,9 +108,9 @@ export default function AgendamentoForm({ user }: Props) {
     }, [dataInicio, dataFim]);
 
     useEffect(() => {
-        if(formik.values.motivation === "") return;
-        updateMotivationHasTransporter(motivationList[Number(formik.values.motivation) - 1].transporterRequired);
-    }, [formik.values.motivation, motivationList]);
+        if (formik.values.motivationId === "") return;
+        updateMotivationHasTransporter(motivationList[Number(formik.values.motivationId) - 1].transporterRequired);
+    }, [formik.values.motivationId, motivationList]);
 
 
     const handleChangeContaineres = (e: any) => {
@@ -124,8 +122,17 @@ export default function AgendamentoForm({ user }: Props) {
 
     async function getMotivationList() {
         try {
-            const response = await axios.get('/api/motivation');
-            updateMotivationList(response.data);
+            const response = await api.get('/motivation');
+            updateMotivationList(response.data.items);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function getDriverList() {
+        try {
+            const response = await api.get('/driver');
+            updateDriverList(response.data.items);
         } catch (error) {
             console.log(error);
         }
@@ -133,8 +140,8 @@ export default function AgendamentoForm({ user }: Props) {
 
     async function getVehicleTypeList() {
         try {
-            const response = await axios.get('/api/vehicle');
-            updateVehicleTypeList(response.data);
+            const response = await api.get('/vehicle_type');
+            updateVehicleTypeList(response.data.items);
         } catch (error) {
             console.log(error);
         }
@@ -142,8 +149,8 @@ export default function AgendamentoForm({ user }: Props) {
 
     async function getYardList() {
         try {
-            const response = await axios.get('/api/yard');
-            updateYardList(response.data);
+            const response = await api.get('/yard');
+            updateYardList(response.data.items);
         } catch (error) {
             console.log(error);
         }
@@ -151,8 +158,8 @@ export default function AgendamentoForm({ user }: Props) {
 
     async function getTransporterList() {
         try {
-            const response = await axios.get('/api/transporter');
-            updateTransporterList(response.data);
+            const response = await api.get('/transporter');
+            updateTransporterList(response.data.items);
         } catch (error) {
             console.log(error);
         }
@@ -176,7 +183,7 @@ export default function AgendamentoForm({ user }: Props) {
 
 
     const veiculoSelecionado: TVehicle = vehicleTypeList.filter((obj: TVehicle) => {
-        return obj.id === Number(formik.values.vehicle_type);
+        return obj.id === Number(formik.values.vehicle_typeId);
     })[0];
 
 
@@ -204,10 +211,10 @@ export default function AgendamentoForm({ user }: Props) {
                                 <InputLabel>Motivação</InputLabel>
                                 <Select
                                     label="Motivação"
-                                    name="motivation"
+                                    name="motivationId"
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
-                                    value={formik.values.motivation}
+                                    value={formik.values.motivationId}
                                     required
                                 >
                                     {motivationList?.map((item: TMotivation) => {
@@ -216,7 +223,7 @@ export default function AgendamentoForm({ user }: Props) {
                                         )
                                     })}
                                 </Select>
-                                {formik.touched.motivation && formik.errors.motivation ? <div style={{ margin: '5px 5px 0', fontSize: '0.8rem', color: '#f00' }}>{formik.errors.motivation}</div> : null}
+                                {formik.touched.motivationId && formik.errors.motivationId ? <div style={{ margin: '5px 5px 0', fontSize: '0.8rem', color: '#f00' }}>{formik.errors.motivationId}</div> : null}
                             </FormControl>
                         </Grid>
 
@@ -225,10 +232,10 @@ export default function AgendamentoForm({ user }: Props) {
                                 <InputLabel>Pátio</InputLabel>
                                 <Select
                                     label="Pátio"
-                                    name="yard"
+                                    name="yardId"
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
-                                    value={formik.values.yard}
+                                    value={formik.values.yardId}
                                     required
                                 >
                                     {yardList.map((item: TYard) => {
@@ -238,7 +245,7 @@ export default function AgendamentoForm({ user }: Props) {
                                         )
                                     })}
                                 </Select>
-                                {formik.touched.yard && formik.errors.yard ? <div style={{ margin: '5px 5px 0', fontSize: '0.8rem', color: '#f00' }}>{formik.errors.yard}</div> : null}
+                                {formik.touched.yardId && formik.errors.yardId ? <div style={{ margin: '5px 5px 0', fontSize: '0.8rem', color: '#f00' }}>{formik.errors.yardId}</div> : null}
                             </FormControl>
                         </Grid>
 
@@ -263,10 +270,10 @@ export default function AgendamentoForm({ user }: Props) {
                                     <InputLabel>Transportadora</InputLabel>
                                     <Select
                                         label="Transportadora"
-                                        name="transporter"
+                                        name="transporterId"
                                         onChange={formik.handleChange}
                                         onBlur={formik.handleBlur}
-                                        value={formik.values.transporter}
+                                        value={formik.values.transporterId}
                                         required
                                     >
                                         {transporterList.map((item: TTransporter) => {
@@ -276,23 +283,30 @@ export default function AgendamentoForm({ user }: Props) {
                                             )
                                         })}
                                     </Select>
-                                    {formik.touched.transporter && formik.errors.transporter ? <div style={{ margin: '5px 5px 0', fontSize: '0.8rem', color: '#f00' }}>{formik.errors.transporter}</div> : null}
+                                    {formik.touched.transporterId && formik.errors.transporterId ? <div style={{ margin: '5px 5px 0', fontSize: '0.8rem', color: '#f00' }}>{formik.errors.transporterId}</div> : null}
                                 </FormControl>
                             </Grid>}
 
-                        <Grid item xs={3}>
-                            <TextField
-                                label="CPF Motorista"
-                                size="small"
-                                fullWidth
-                                inputProps={{ maxLength: 11 }}
-                                name="driver_cpf"
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                value={cpfMask(formik.values.driver_cpf)}
-                                required
-                            />
-                            {formik.touched.driver_cpf && formik.errors.driver_cpf ? <div style={{ margin: '5px 5px 0', fontSize: '0.8rem', color: '#f00' }}>{formik.errors.driver_cpf}</div> : null}
+                        <Grid item xs={6}>
+                            <FormControl fullWidth size="small">
+                                <InputLabel>Motorista</InputLabel>
+                                <Select
+                                    label="Motorista"
+                                    name="driverId"
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    value={formik.values.driverId}
+                                    required
+                                >
+                                    {driverList.map((item: TDriver) => {
+                                        return (
+                                            <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
+
+                                        )
+                                    })}
+                                </Select>
+                                {formik.touched.driverId && formik.errors.driverId ? <div style={{ margin: '5px 5px 0', fontSize: '0.8rem', color: '#f00' }}>{formik.errors.driverId}</div> : null}
+                            </FormControl>
                         </Grid>
 
                         <Grid item xs={9}>
@@ -300,10 +314,10 @@ export default function AgendamentoForm({ user }: Props) {
                                 <InputLabel>Tipo de Veículo</InputLabel>
                                 <Select
                                     label="Tipo de Veículo"
-                                    name="vehicle_type"
+                                    name="vehicle_typeId"
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
-                                    value={formik.values.vehicle_type}
+                                    value={formik.values.vehicle_typeId}
                                     required
                                 >
                                     {vehicleTypeList.map((item: TVehicle) => {
@@ -312,7 +326,7 @@ export default function AgendamentoForm({ user }: Props) {
                                         )
                                     })}
                                 </Select>
-                                {formik.touched.vehicle_type && formik.errors.vehicle_type ? <div style={{ margin: '5px 5px 0', fontSize: '0.8rem', color: '#f00' }}>{formik.errors.vehicle_type}</div> : null}
+                                {formik.touched.vehicle_typeId && formik.errors.vehicle_typeId ? <div style={{ margin: '5px 5px 0', fontSize: '0.8rem', color: '#f00' }}>{formik.errors.vehicle_typeId}</div> : null}
                             </FormControl>
                         </Grid>
 
@@ -368,7 +382,7 @@ export default function AgendamentoForm({ user }: Props) {
                             />
                         </Grid>}
 
-                        <Containeres vehicle_type={Number(formik.values.vehicle_type)} vehicleTypeList={vehicleTypeList} handleChange={handleChangeContaineres} />
+                        <Containeres vehicle_type={Number(formik.values.vehicle_typeId)} vehicleTypeList={vehicleTypeList} handleChange={handleChangeContaineres} />
 
                         <Grid item xs={12}>
                             <Subtitle text="Janela de Agendamento" />
@@ -415,7 +429,7 @@ export default function AgendamentoForm({ user }: Props) {
                 </form>
             </Paper>
 
-            {/* <pre>{JSON.stringify(formik.values.motivation, null, 4)}</pre> */}
+            <pre>{JSON.stringify(formik.values, null, 4)}</pre>
 
         </section>
     )

@@ -1,7 +1,7 @@
+import api from "@/service/api";
 import { TOwner } from "@/types/TOwner";
 import AddIcon from '@mui/icons-material/Add';
 import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip } from "@mui/material";
-import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import SetDynamicRoute from "../SetDynamicRoute";
@@ -20,8 +20,8 @@ export default function OwnerList() {
 
     async function getOwners() {
         try {
-            const response = await axios.get('/api/owner');
-            updateOwners(response.data);
+            const response = await api.get('/owners');
+            updateOwners(response.data.items);
         } catch (error) {
             console.log(error);
         } finally {

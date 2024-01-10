@@ -4,10 +4,10 @@
 import { cepMask, cnpjMask } from "@/commom/masks";
 import BackdropLoader from "@/components/_ui/BackdropLoader";
 import Title from "@/components/_ui/Title";
+import api from "@/service/api";
 import { TTransporter } from "@/types/TTransporter";
 import AddIcon from '@mui/icons-material/Add';
 import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip } from "@mui/material";
-import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import SetDynamicRoute from "../SetDynamicRoute";
@@ -24,8 +24,8 @@ export default function TransporterList() {
 
     async function getTransporters() {
         try {
-            const response = await axios.get('/api/transporter');
-            updateTransporters(response.data);
+            const response = await api.get('/transporter');
+            updateTransporters(response.data.items);
         } catch (error) {
             console.log(error);
         } finally {

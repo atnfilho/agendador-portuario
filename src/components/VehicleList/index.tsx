@@ -2,12 +2,12 @@
 
 import BackdropLoader from "@/components/_ui/BackdropLoader";
 import Title from "@/components/_ui/Title";
+import api from "@/service/api";
 import { TVehicle } from "@/types/TVehicle";
 import AddIcon from '@mui/icons-material/Add';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip } from "@mui/material";
-import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import SetDynamicRoute from "../SetDynamicRoute";
@@ -24,8 +24,8 @@ export default function VehicleList() {
 
     async function getVehicles() {
         try {
-            const response = await axios.get('/api/vehicle');
-            updateVehicles(response.data);
+            const response = await api.get('/vehicle_type');
+            updateVehicles(response.data.items);
         } catch (error) {
             console.log(error);
         } finally {

@@ -4,10 +4,10 @@ import { formataDataPadraoBR } from '@/commom/formatters';
 import { cpfMask } from '@/commom/masks';
 import BackdropLoader from '@/components/_ui/BackdropLoader';
 import Title from '@/components/_ui/Title';
+import api from '@/service/api';
 import { TDriver } from '@/types/TDriver';
 import AddIcon from '@mui/icons-material/Add';
 import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip } from '@mui/material';
-import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import SetDynamicRoute from '../SetDynamicRoute';
@@ -25,8 +25,8 @@ export default function DriversList() {
 
     async function getMotivations() {
         try {
-            const response = await axios.get('/api/driver');
-            updateDrivers(response.data);
+            const response = await api.get('/driver');
+            updateDrivers(response.data.items);
         } catch (error) {
             console.log(error);
         } finally {

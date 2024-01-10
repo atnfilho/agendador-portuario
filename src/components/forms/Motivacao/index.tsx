@@ -2,9 +2,9 @@
 
 import BackdropLoader from "@/components/_ui/BackdropLoader";
 import Title from "@/components/_ui/Title";
+import api from "@/service/api";
 import SaveIcon from '@mui/icons-material/Save';
 import { Button, Checkbox, FormControlLabel, FormGroup, Grid, Paper, TextField } from "@mui/material";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -29,7 +29,7 @@ export function MotivacaoForm() {
   const saveMotivation = async () => {
     try {
       updateLoading(true);
-      await axios.post('/api/motivation', { ...formData });
+      await api.post('/motivation', { ...formData });
       router.push('/motivacao');
     } catch (error: any) {
       updateError(error.message);

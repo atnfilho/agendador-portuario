@@ -2,9 +2,9 @@
 
 import BackdropLoader from "@/components/_ui/BackdropLoader";
 import Title from "@/components/_ui/Title";
+import api from "@/service/api";
 import SaveIcon from '@mui/icons-material/Save';
 import { Button, Grid, Paper, TextField } from "@mui/material";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -30,7 +30,7 @@ export default function PatioForm() {
   const saveYard = async () => {
     try {
       updateLoading(true);
-      await axios.post('/api/yard', { ...formData });
+      await api.post('/yard', { ...formData });
       router.push('/patio');
     } catch (error: any) {
       updateError(error.message);

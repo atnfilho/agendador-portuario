@@ -3,10 +3,10 @@
 
 import BackdropLoader from "@/components/_ui/BackdropLoader";
 import Title from "@/components/_ui/Title";
+import api from "@/service/api";
 import { TYard } from "@/types/TYard";
 import AddIcon from '@mui/icons-material/Add';
 import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip } from "@mui/material";
-import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import SetDynamicRoute from "../SetDynamicRoute";
@@ -23,8 +23,8 @@ export default function YardList() {
 
     async function getYards() {
         try {
-            const response = await axios.get('/api/yard');
-            updateYards(response.data);
+            const response = await api.get('/yard');
+            updateYards(response.data.items);
         } catch (error) {
             console.log(error);
         } finally {

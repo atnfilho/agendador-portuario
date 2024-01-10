@@ -57,6 +57,13 @@ const columns = [
         cell: (row: any) => <div style={{ fontSize: 14 }}>{new Date(row.schedule_window_end).toLocaleDateString('pt-br', { hour: 'numeric', minute: 'numeric' })}</div>
     },
     {
+        name: 'Pátio',
+        selector: (row: any) => row.yard.id,
+        sortable: true,
+        wrap: true,
+        cell: (row: any) => <div style={{ fontSize: 14 }}>{row.yard.name}</div>
+    },
+    {
         name: 'Veículo',
         selector: (row: any) => row.vehicle_type.code,
         sortable: true,
@@ -75,13 +82,6 @@ const columns = [
         selector: (row: any) => row.transporter?.name,
         sortable: true,
         cell: (row: any) => <div style={{ fontSize: 14 }}>{row.transporter?.name}</div>
-    },
-    {
-        name: 'Pátio',
-        selector: (row: any) => row.yard.id,
-        sortable: true,
-        wrap: true,
-        cell: (row: any) => <div style={{ fontSize: 14 }}>{row.yard.name}</div>
     },
     {
         name: '',
@@ -111,7 +111,7 @@ export default function DataTableComponent({ data, loading }: any) {
                 || dataFimFormatada && dataFimFormatada.toLowerCase().includes(filterText.toLowerCase())
                 || item.motivation.name && item.motivation.name.toLowerCase().includes(filterText.toLowerCase())
                 || item.yard.name && item.yard.name.toLowerCase().includes(filterText.toLowerCase())
-                || item.transporter.name && item.transporter.name.toLowerCase().includes(filterText.toLowerCase())
+                || item.transporter?.name && item.transporter?.name.toLowerCase().includes(filterText.toLowerCase())
         }
     );
 

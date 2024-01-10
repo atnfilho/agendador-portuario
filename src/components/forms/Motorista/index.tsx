@@ -4,10 +4,10 @@ import { onlyNumbers } from "@/commom/formatters";
 import { cpfMask } from "@/commom/masks";
 import BackdropLoader from "@/components/_ui/BackdropLoader";
 import Title from "@/components/_ui/Title";
+import api from "@/service/api";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import SaveIcon from '@mui/icons-material/Save';
 import { Button, Grid, Paper, TextField } from "@mui/material";
-import axios from "axios";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -98,7 +98,11 @@ export function MotoristaForm() {
     const saveDriver = async (data: any, resetForm: Function) => {
         try {
             updateLoading(true);
-            await axios.post('/api/driver', { ...data });
+            await api.post(`/driver`, { ...data }, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
             resetForm();
             router.push('/motorista');
         } catch (error: any) {

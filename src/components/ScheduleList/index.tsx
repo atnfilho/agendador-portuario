@@ -1,7 +1,7 @@
+import api from "@/service/api";
 import { TSchedule } from "@/types/TSchedule";
 import AddIcon from '@mui/icons-material/Add';
 import { IconButton, Tooltip } from "@mui/material";
-import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import DataTableComponent from "../DataTableComponent";
@@ -21,9 +21,8 @@ export default function ScheduleList() {
 
     async function getSchedules() {
         try {
-            const response = await axios.get('/api/schedule');
-            console.log({response})
-            updateSchedules(response.data);
+            const response = await api.get(`/schedule`);
+            updateSchedules(response.data.items);
         } catch (error) {
             console.log(error);
         } finally {

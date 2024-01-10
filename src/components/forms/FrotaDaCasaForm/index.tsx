@@ -2,10 +2,10 @@
 
 import BackdropLoader from "@/components/_ui/BackdropLoader";
 import Title from "@/components/_ui/Title";
+import api from "@/service/api";
 import { TVehicle } from "@/types/TVehicle";
 import SaveIcon from '@mui/icons-material/Save';
 import { Button, FormControl, Grid, InputLabel, MenuItem, Paper, Select, TextField } from "@mui/material";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -40,7 +40,7 @@ export default function FrotaDaCasaForm() {
         
         try {
             updateLoading(true);
-            await axios.post('/api/owner', { ...formData });
+            await api.post('/owners', { ...formData });
             router.push('/frotadacasa');
         } catch (error: any) {
             updateError(error.message);
@@ -51,8 +51,8 @@ export default function FrotaDaCasaForm() {
 
     async function getVehicleTypeList() {
         try {
-            const response = await axios.get('/api/vehicle');
-            updateVehicleTypeList(response.data);
+            const response = await api.get('/vehicle_type');
+            updateVehicleTypeList(response.data.items);
         } catch (error) {
             console.log(error);
         }

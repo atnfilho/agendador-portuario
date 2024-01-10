@@ -4,6 +4,7 @@ import { onlyNumbers } from "@/commom/formatters";
 import { cepMask, cnpjMask } from "@/commom/masks";
 import BackdropLoader from "@/components/_ui/BackdropLoader";
 import Title from "@/components/_ui/Title";
+import api from "@/service/api";
 import SaveIcon from '@mui/icons-material/Save';
 import { Button, Grid, Paper, TextField } from "@mui/material";
 import axios from "axios";
@@ -63,7 +64,7 @@ export default function TransportadoraForm() {
         city: `${formData.city}/${formData.uf.toUpperCase()}`
       }
 
-      await axios.post('/api/transporter', { ...data });
+      await api.post('/transporter', { ...data });
       router.push('/transportadora');
 
     } catch (error: any) {
