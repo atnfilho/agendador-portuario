@@ -11,8 +11,7 @@ import { TTransporter } from "@/types/TTransporter";
 import { TVehicle } from "@/types/TVehicle";
 import { TYard } from "@/types/TYard";
 import SaveIcon from '@mui/icons-material/Save';
-import { Button, FormControl, Grid, InputLabel, MenuItem, Paper, Select, TextField } from "@mui/material";
-import axios from "axios";
+import { Alert, Button, FormControl, Grid, InputLabel, MenuItem, Paper, Select, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -60,11 +59,11 @@ export default function AgendamentoForm({ user }: Props) {
 
     const formik = useFormik({
         initialValues: {
-            motivationId: "",
-            yardId: "",
-            transporterId: "",
-            driverId: "",
-            vehicle_typeId: "",
+            motivationId: null,
+            yardId: null,
+            transporterId: null,
+            driverId: null,
+            vehicle_typeId: null,
             containeres: {
                 container1: "",
                 container1iso: "",
@@ -85,7 +84,7 @@ export default function AgendamentoForm({ user }: Props) {
         validate,
         onSubmit: async (values, { resetForm }) => {
             const { containeres, ...obj } = values;
-            const data = { ...obj, ...containeres, user_id: user };
+            const data = { ...obj, ...containeres, userId: user };
             await saveSchedule(data, resetForm);
         }
     })
@@ -108,8 +107,8 @@ export default function AgendamentoForm({ user }: Props) {
     }, [dataInicio, dataFim]);
 
     useEffect(() => {
-        if (formik.values.motivationId === "") return;
-        updateMotivationHasTransporter(motivationList[Number(formik.values.motivationId) - 1].transporterRequired);
+        if (!formik.values.motivationId) return;
+        updateMotivationHasTransporter(motivationList[formik.values.motivationId - 1].transporterRequired);
     }, [formik.values.motivationId, motivationList]);
 
 
@@ -124,7 +123,8 @@ export default function AgendamentoForm({ user }: Props) {
         try {
             const response = await api.get('/motivation');
             updateMotivationList(response.data.items);
-        } catch (error) {
+        } catch (error: any) {
+            updateError(`Falha ao obter lista de motivações. Mensagem: ${error.message}`);
             console.log(error);
         }
     }
@@ -133,7 +133,8 @@ export default function AgendamentoForm({ user }: Props) {
         try {
             const response = await api.get('/driver');
             updateDriverList(response.data.items);
-        } catch (error) {
+        } catch (error: any) {
+            updateError(`Falha ao obter lista de motoristas. Mensagem: ${error.message}`);
             console.log(error);
         }
     }
@@ -142,7 +143,8 @@ export default function AgendamentoForm({ user }: Props) {
         try {
             const response = await api.get('/vehicle_type');
             updateVehicleTypeList(response.data.items);
-        } catch (error) {
+        } catch (error: any) {
+            updateError(`Falha ao obter lista de veículos. Mensagem: ${error.message}`);
             console.log(error);
         }
     }
@@ -151,7 +153,8 @@ export default function AgendamentoForm({ user }: Props) {
         try {
             const response = await api.get('/yard');
             updateYardList(response.data.items);
-        } catch (error) {
+        } catch (error: any) {
+            updateError(`Falha ao obter lista de pátios. Mensagem: ${error.message}`);
             console.log(error);
         }
     }
@@ -160,7 +163,8 @@ export default function AgendamentoForm({ user }: Props) {
         try {
             const response = await api.get('/transporter');
             updateTransporterList(response.data.items);
-        } catch (error) {
+        } catch (error: any) {
+            updateError(`Falha ao obter lista de transportadoras. Mensagem: ${error.message}`);
             console.log(error);
         }
     }
@@ -169,13 +173,13 @@ export default function AgendamentoForm({ user }: Props) {
     const saveSchedule = async (data: any, resetForm: Function) => {
         try {
             updateLoading(true);
-            await axios.post('/api/schedule', { ...data });
+            await api.post('/schedule', { ...data });
             resetForm();
             updateDataInicio(null);
             updateDataFim(null);
             router.push('/agendamento');
         } catch (error: any) {
-            updateError(error.message);
+            updateError(`Falha ao gravar agendamento. Mensagem: ${error.message}`);
         } finally {
             updateLoading(false);
         }
@@ -257,7 +261,7 @@ export default function AgendamentoForm({ user }: Props) {
                             <TextField
                                 label="Usuário"
                                 size="small"
-                                name="user_id"
+                                name="userId"
                                 fullWidth
                                 disabled
                                 value={user}
@@ -415,21 +419,27 @@ export default function AgendamentoForm({ user }: Props) {
                         </Grid>
 
 
-                        <Grid item xs={12} style={{ display: 'flex', gap: '20px', margin: '20px 0' }}>
+                        {error &&
+                            <Grid item xs={12} style={{ color: "#f00" }}>
+                                <Alert severity="error">
+                                    {error}
+                                </Alert>
+                            </Grid>
+                        }
+
+
+                        <Grid item xs={12} style={{ display: 'flex', gap: '20px', margin: '20px 0 0' }}>
                             <Button type="submit" variant="contained" size="small"><SaveIcon fontSize="small" sx={{ marginRight: '8px', marginBottom: '4px' }} />Gravar</Button>
                             <Button variant="outlined" size="small"><a href="/agendamento">Voltar</a></Button>
                         </Grid>
 
-                        <Grid item xs={12} style={{ color: "#f00" }}>
-                            {error}
-                        </Grid>
 
                     </Grid>
 
                 </form>
             </Paper>
 
-            <pre>{JSON.stringify(formik.values, null, 4)}</pre>
+            {/* <pre>{JSON.stringify(formik.values, null, 4)}</pre> */}
 
         </section>
     )

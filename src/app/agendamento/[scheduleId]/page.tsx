@@ -8,7 +8,7 @@ import { TSchedule } from "@/types/TSchedule";
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import QueryBuilderIcon from '@mui/icons-material/QueryBuilder';
 
-import { Button, Paper } from "@mui/material";
+import { Alert, Button, Paper } from "@mui/material";
 import { useEffect, useState } from "react";
 
 
@@ -27,8 +27,12 @@ export default function ScheduleDetail({ params }: { params: { scheduleId: strin
             try {
                 const response: any = await api.get(`/schedule/${params.scheduleId}`);
                 updateSchedule(response.data);
-            } catch (error) {
+                if (response.data.message) {
+                    updateError(response.data.message);
+                }
+            } catch (error: any) {
                 console.log(error);
+                updateError(error.message)
             } finally {
                 updateLoading(false);
             }
@@ -59,12 +63,16 @@ export default function ScheduleDetail({ params }: { params: { scheduleId: strin
 
                             <div style={{ color: '#A9A9A9' }}>Início:</div>
                             <div style={{ fontWeight: 600 }}>
-                                {new Date(schedule?.schedule_window_start as string).toLocaleDateString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                                {schedule?.schedule_window_start
+                                    ? new Date(schedule?.schedule_window_start as string).toLocaleDateString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+                                    : ""}
                             </div>
 
                             <div style={{ color: '#A9A9A9' }}>Fim:</div>
                             <div style={{ fontWeight: 600 }}>
-                                {new Date(schedule?.schedule_window_start as string).toLocaleDateString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                                {schedule?.schedule_window_end
+                                    ? new Date(schedule?.schedule_window_end as string).toLocaleDateString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+                                    : ""}
                             </div>
 
                         </div>
@@ -113,7 +121,7 @@ export default function ScheduleDetail({ params }: { params: { scheduleId: strin
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                             <div style={{ color: '#A9A9A9' }}>Veículo</div>
                             <div style={{ fontWeight: 600 }}>
-                                {`(${schedule?.vehicle_type?.code}) ${schedule?.vehicle_type?.name}`}
+                                {schedule?.vehicle_type ? `(${schedule?.vehicle_type?.code}) ${schedule?.vehicle_type?.name}` : ""}
                             </div>
                             <div style={{ color: '#A9A9A9', fontSize: '0.9rem' }}>
                                 Placa Frontal: {schedule?.plate_front}
@@ -136,10 +144,10 @@ export default function ScheduleDetail({ params }: { params: { scheduleId: strin
 
                                 <div style={{ color: '#A9A9A9' }}>Containeres</div>
 
-                                <div style={{ fontWeight: 600 }}>{schedule?.container1} <span style={{ color: '#A9A9A9', fontSize: '0.9rem' }}>ISO: {schedule?.container1iso}</span></div>
-                                <div style={{ fontWeight: 600 }}>{schedule?.container2} <span style={{ color: '#A9A9A9', fontSize: '0.9rem' }}>ISO: {schedule?.container2iso}</span></div>
-                                <div style={{ fontWeight: 600 }}>{schedule?.container3} <span style={{ color: '#A9A9A9', fontSize: '0.9rem' }}>ISO: {schedule?.container3iso}</span></div>
-                                <div style={{ fontWeight: 600 }}>{schedule?.container4} <span style={{ color: '#A9A9A9', fontSize: '0.9rem' }}>ISO: {schedule?.container4iso}</span></div>
+                                {schedule?.container1 && <div style={{ fontWeight: 600 }}> {schedule?.container1} <span style={{ color: '#A9A9A9', fontSize: '0.9rem' }}>ISO: {schedule?.container1iso}</span></div>}
+                                {schedule?.container2 && <div style={{ fontWeight: 600 }}> {schedule?.container2} <span style={{ color: '#A9A9A9', fontSize: '0.9rem' }}>ISO: {schedule?.container2iso}</span></div>}
+                                {schedule?.container3 && <div style={{ fontWeight: 600 }}> {schedule?.container3} <span style={{ color: '#A9A9A9', fontSize: '0.9rem' }}>ISO: {schedule?.container3iso}</span></div>}
+                                {schedule?.container4 && <div style={{ fontWeight: 600 }}> {schedule?.container4} <span style={{ color: '#A9A9A9', fontSize: '0.9rem' }}>ISO: {schedule?.container4iso}</span></div>}
 
                             </div>
 
@@ -156,7 +164,7 @@ export default function ScheduleDetail({ params }: { params: { scheduleId: strin
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                             <div style={{ color: '#A9A9A9' }}>Motivação</div>
                             <div style={{ fontWeight: 600 }}>
-                                {`(${schedule?.motivation?.code}) ${schedule?.motivation?.name}`}
+                                {schedule?.motivation ? `(${schedule?.motivation?.code}) ${schedule?.motivation?.name}` : ""}
                             </div>
                             <div style={{ color: '#A9A9A9', fontSize: '0.9rem' }}>
                                 {schedule?.motivation?.description}
@@ -191,11 +199,16 @@ export default function ScheduleDetail({ params }: { params: { scheduleId: strin
                     </Paper>
                 </section>
 
-
+                {error &&
+                    <Alert severity="error">
+                        {error}
+                    </Alert>
+                }
 
                 <div style={{ margin: '30px 0 0' }}>
                     <Button variant="outlined" size="small"><a href="/agendamento">Voltar</a></Button>
                 </div>
+
 
             </Paper >
 

@@ -5,14 +5,15 @@ import Title from "@/components/_ui/Title";
 import api from "@/service/api";
 import { TVehicle } from "@/types/TVehicle";
 import SaveIcon from '@mui/icons-material/Save';
-import { Button, FormControl, Grid, InputLabel, MenuItem, Paper, Select, TextField } from "@mui/material";
+import { Alert, Button, FormControl, Grid, InputLabel, MenuItem, Paper, Select, TextField } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function FrotaDaCasaForm() {
 
     const router = useRouter();
-    const [formData, updateFormData] = useState({ type_vehicle: "", vehicle_typeId: "", plate_front: "", plate_trailer: "", plate_semi_trailer: "" });
+    const [formData, updateFormData] = useState({ type_vehicle: "", vehicle_typeId: null, plate_front: "", plate_trailer: "", plate_semi_trailer: "" });
+    const [selectedVehicle, updateSelectedVehicle] = useState<TVehicle>();
     const [loading, updateLoading] = useState(false);
     const [error, updateError] = useState("");
     const [vehicleTypeList, updateVehicleTypeList] = useState<TVehicle[]>([]);
@@ -24,6 +25,18 @@ export default function FrotaDaCasaForm() {
         }
         loadSelectOptions();
     }, []);
+
+
+    useEffect(() => {
+
+        const vehicle: TVehicle | undefined = vehicleTypeList.find((obj: TVehicle) => {
+            return obj.id === Number(formData.vehicle_typeId);
+        });
+
+        updateSelectedVehicle(vehicle);
+
+    }, [formData.vehicle_typeId, vehicleTypeList])
+
 
     const handleChange = (e: any) => {
         const { name, value, type, checked } = e.target;
@@ -37,13 +50,13 @@ export default function FrotaDaCasaForm() {
 
 
     const saveOwner = async () => {
-        
+
         try {
             updateLoading(true);
             await api.post('/owners', { ...formData });
             router.push('/frotadacasa');
         } catch (error: any) {
-            updateError(error.message);
+            updateError(`Falha ao gravar veículo. Mensagem: ${error.message}`);
         } finally {
             updateLoading(false);
         }
@@ -53,14 +66,12 @@ export default function FrotaDaCasaForm() {
         try {
             const response = await api.get('/vehicle_type');
             updateVehicleTypeList(response.data.items);
-        } catch (error) {
+        } catch (error: any) {
+            updateError(`Falha ao obter lista de veículos. Mensagem: ${error.message}`)
             console.log(error);
         }
-    }    
+    }
 
-    const veiculoSelecionado: TVehicle = vehicleTypeList.filter((obj: TVehicle) => {
-        return obj.id === 1;
-    })[0];
 
     return (
         <section style={{ background: '#fff', boxShadow: 'var(--box-shadow)', borderRadius: 'var(--border-radius)' }}>
@@ -77,7 +88,7 @@ export default function FrotaDaCasaForm() {
 
                     <Grid container spacing={2} rowSpacing={3}>
 
-                        <Grid item xs={12} sm={5}>
+                        <Grid item xs={12} sm={6}>
                             <TextField
                                 label="Descrição"
                                 name="type_vehicle"
@@ -90,7 +101,7 @@ export default function FrotaDaCasaForm() {
                             />
                         </Grid>
 
-                        <Grid item xs={5}>
+                        <Grid item xs={6}>
                             <FormControl fullWidth size="small">
                                 <InputLabel>Tipo de Veículo</InputLabel>
                                 <Select
@@ -110,7 +121,7 @@ export default function FrotaDaCasaForm() {
                         </Grid>
 
 
-                        {veiculoSelecionado?.plate_front && <Grid item xs={3}>
+                        {selectedVehicle?.plate_front && <Grid item xs={3}>
                             <TextField
                                 label="Placa Frontal"
                                 name="plate_front"
@@ -124,7 +135,7 @@ export default function FrotaDaCasaForm() {
                         </Grid>
                         }
 
-                        {veiculoSelecionado?.plate_trailer &&
+                        {selectedVehicle?.plate_trailer &&
                             <Grid item xs={3}>
                                 <TextField
                                     label="Placa Reboque"
@@ -139,7 +150,7 @@ export default function FrotaDaCasaForm() {
                             </Grid>
                         }
 
-                        {veiculoSelecionado?.plate_semi_trailer && <Grid item xs={3}>
+                        {selectedVehicle?.plate_semi_trailer && <Grid item xs={3}>
                             <TextField
                                 label="Placa Semi Reboque"
                                 name="plate_semi_trailer"
@@ -152,6 +163,13 @@ export default function FrotaDaCasaForm() {
                             />
                         </Grid>}
 
+                        {error &&
+                            <Grid item xs={12} style={{ color: "#f00" }}>
+                                <Alert severity="error">
+                                    {error}
+                                </Alert>
+                            </Grid>
+                        }
 
 
                         <Grid item xs={12} style={{ display: 'flex', gap: '20px' }}>
@@ -159,15 +177,11 @@ export default function FrotaDaCasaForm() {
                             <Button variant="outlined" size="small"><a href="/frotadacasa">Voltar</a></Button>
                         </Grid>
 
-                        <Grid item xs={12} style={{ color: "#f00" }}>
-                            {error}
-                        </Grid>
 
                     </Grid>
 
                 </form>
             </Paper>
-
 
         </section>
     )
