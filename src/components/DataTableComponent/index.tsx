@@ -87,7 +87,7 @@ const columns = [
         name: '',
         cell: (row: any) => <div>
             <a href={`/agendamento/${row.id}`}>
-                <InfoIcon color='primary' style={{ cursor: 'pointer' }} /> {row.id}
+                <InfoIcon color='primary' style={{ cursor: 'pointer' }} />
             </a>
         </div>
     }
