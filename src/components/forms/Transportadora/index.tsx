@@ -37,11 +37,12 @@ export default function TransportadoraForm({ id }: Props) {
           }
 
           const cityArr = response.city.split("/");
-          const uf = cityArr.splice(-1);
+          const uf = cityArr.splice(-1).join("");
           const city = cityArr.join(" ");
           const addressArr = response.address.split(",");
-          const number = addressArr.splice(-1);
+          const number = addressArr.splice(-1).join("");
           const address = addressArr.join(" ").trim();
+
           updateFormData(prevState => ({ name: response.name, cnpj: response.cnpj, socialrazion: response.socialrazion, cep: response.cep, address, number, city, uf }))
         
         } catch (error: any) {
@@ -266,6 +267,7 @@ export default function TransportadoraForm({ id }: Props) {
           </Grid>
 
         </form>
+        {/* <pre>{JSON.stringify(formData, null, 4)}</pre> */}
       </Paper>
 
     </section>
