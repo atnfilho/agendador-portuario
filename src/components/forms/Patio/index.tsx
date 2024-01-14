@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 
 
 type Props = {
-  id: number
+  id?: number
 }
 
 
