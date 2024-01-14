@@ -6,19 +6,53 @@ import BackdropLoader from "@/components/_ui/BackdropLoader";
 import Title from "@/components/_ui/Title";
 import api from "@/service/api";
 import SaveIcon from '@mui/icons-material/Save';
-import { Button, Grid, Paper, TextField } from "@mui/material";
+import { Alert, Button, Grid, Paper, TextField } from "@mui/material";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { isCNPJ } from "validation-br";
 
 
-export default function TransportadoraForm() {
+type Props = {
+  id?: number
+}
+
+export default function TransportadoraForm({ id }: Props) {
 
   const router = useRouter();
-  const [formData, setFormData] = useState({ name: '', cnpj: '', socialrazion: '', cep: '', address: '', number: '', city: '', uf: '' });
+  const [formData, updateFormData] = useState({ name: '', cnpj: '', socialrazion: '', cep: '', address: '', number: '', city: '', uf: '' });
   const [loading, updateLoading] = useState(false);
   const [error, updateError] = useState("");
+
+  useEffect(() => {
+    if (id) {
+      const getTransporter = async () => {
+        try {
+          updateLoading(true);
+          const response = (await api.get(`/transporter/${id}`)).data;
+
+          if(!response) {
+            updateError(`Nenhum registro encontrado para o identificador ${id}.`);
+            return;
+          }
+
+          const cityArr = response.city.split("/");
+          const uf = cityArr.splice(-1);
+          const city = cityArr.join(" ");
+          const addressArr = response.address.split(",");
+          const number = addressArr.splice(-1);
+          const address = addressArr.join(" ").trim();
+          updateFormData(prevState => ({ name: response.name, cnpj: response.cnpj, socialrazion: response.socialrazion, cep: response.cep, address, number, city, uf }))
+        
+        } catch (error: any) {
+          updateError(`Falha ao obter os dados da transportadora. Mensagem: ${error.message}`)
+        } finally {
+          updateLoading(false);
+        }
+      }
+      getTransporter();
+    }
+  }, [id]);
 
 
   const handleChange = (e: any) => {
@@ -26,7 +60,7 @@ export default function TransportadoraForm() {
 
     if (["number", "cep", "cnpj"].includes(name)) value = onlyNumbers(value);
 
-    setFormData({ ...formData, [name]: value });
+    updateFormData({ ...formData, [name]: value });
 
   }
 
@@ -64,7 +98,10 @@ export default function TransportadoraForm() {
         city: `${formData.city}/${formData.uf.toUpperCase()}`
       }
 
-      await api.post('/transporter', { ...data });
+      id
+        ? await api.patch(`/transporter/${id}`, { ...data })
+        : await api.post('/transporter', { ...data });
+
       router.push('/transportadora');
 
     } catch (error: any) {
@@ -78,9 +115,9 @@ export default function TransportadoraForm() {
     try {
       updateLoading(true);
       const { data } = await axios.get(`https://brasilapi.com.br/api/cep/v1/${cep}`);
-      setFormData((prevData) => ({ ...prevData, uf: data.state, city: data.city, address: data.street }));
+      updateFormData((prevData) => ({ ...prevData, uf: data.state, city: data.city, address: data.street }));
     } catch (error) {
-      setFormData((prevData) => ({ ...prevData, uf: "", city: "", address: "" }));
+      updateFormData((prevData) => ({ ...prevData, uf: "", city: "", address: "" }));
     } finally {
       updateLoading(false)
     }
@@ -205,14 +242,25 @@ export default function TransportadoraForm() {
               />
             </Grid>
 
+            {error &&
+              <Grid item xs={12} style={{ color: "#f00" }}>
+                <Alert severity="error">
+                  {error}
+                </Alert>
+              </Grid>
+            }
 
             <Grid item xs={12} style={{ display: 'flex', gap: '20px' }}>
-              <Button type="submit" variant="contained" size="small"><SaveIcon fontSize="small" sx={{ marginRight: '8px', marginBottom: '4px' }} />Gravar</Button>
+              <Button
+                type="submit"
+                variant="contained"
+                size="small"
+                disabled={error !== ""}
+              >
+                <SaveIcon fontSize="small" sx={{ marginRight: '8px', marginBottom: '4px' }} />
+                {id ? "Atualizar" : "Gravar"}
+              </Button>
               <Button variant="outlined" size="small"><a href="/transportadora">Voltar</a></Button>
-            </Grid>
-
-            <Grid item xs={12} style={{ color: "#f00" }}>
-              {error}
             </Grid>
 
           </Grid>

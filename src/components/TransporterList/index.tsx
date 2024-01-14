@@ -7,6 +7,7 @@ import Title from "@/components/_ui/Title";
 import api from "@/service/api";
 import { TTransporter } from "@/types/TTransporter";
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
 import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -57,6 +58,7 @@ export default function TransporterList() {
                                     <TableCell sx={{ fontWeight: 'bold' }}>Endereço</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold' }}>CEP</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold' }}>Cidade</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}></TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -68,6 +70,13 @@ export default function TransporterList() {
                                         <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.address}</TableCell>
                                         <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{cepMask(item.cep)}</TableCell>
                                         <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.city}</TableCell>
+                                        <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>
+                                            <Tooltip title="Editar">
+                                                <a href={`/transportadora/${item.id}`}>
+                                                    <EditIcon color='primary' style={{ fontSize: '20px' }} />
+                                                </a>
+                                            </Tooltip>
+                                        </TableCell>
                                     </TableRow>
 
                                 ))}
