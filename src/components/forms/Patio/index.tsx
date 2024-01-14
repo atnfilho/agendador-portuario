@@ -4,21 +4,46 @@ import BackdropLoader from "@/components/_ui/BackdropLoader";
 import Title from "@/components/_ui/Title";
 import api from "@/service/api";
 import SaveIcon from '@mui/icons-material/Save';
-import { Button, Grid, Paper, TextField } from "@mui/material";
+import { Alert, Button, Grid, Paper, TextField } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
-export default function PatioForm() {
+type Props = {
+  id: number
+}
+
+
+export default function PatioForm({ id }: Props) {
 
   const router = useRouter();
-  const [formData, setFormData] = useState({ name: '' });
+  const [formData, updateFormData] = useState({ name: '' });
   const [loading, updateLoading] = useState(false);
   const [error, updateError] = useState("");
 
+
+  useEffect(() => {
+
+    if (id) {
+      const getYard = async () => {
+        try {
+          updateLoading(true)
+          const response = (await api.get(`/yard/${id}`)).data;
+          updateFormData(prevState => ({ name: response.name }))
+        } catch (error: any) {
+          updateError(`Falha ao obter os dados do pátio. Mensagem: ${error.message}`);
+        } finally {
+          updateLoading(false);
+        }
+      }
+      getYard();
+    }
+
+  }, [id]);
+
   const handleChange = (e: any) => {
     const value = e.target.value;
-    setFormData({ ...formData, [e.target.name]: value });
+    updateFormData({ ...formData, [e.target.name]: value });
   }
 
   const handleSubmit = async (e: any) => {
@@ -30,10 +55,14 @@ export default function PatioForm() {
   const saveYard = async () => {
     try {
       updateLoading(true);
-      await api.post('/yard', { ...formData });
+
+      id 
+        ? await api.patch(`/yard/${id}`, { ...formData })
+        : await api.post('/yard', { ...formData });
+      
       router.push('/patio');
     } catch (error: any) {
-      updateError(error.message);
+      updateError(`Falha ao gravar dados do pátio. Mensagem: ${error.message}`)
     } finally {
       updateLoading(false);
     }
@@ -43,7 +72,7 @@ export default function PatioForm() {
     <section style={{ background: '#fff', boxShadow: 'var(--box-shadow)', borderRadius: 'var(--border-radius)' }}>
 
       <BackdropLoader open={loading} />
-      
+
       <Title>Cadastro de Pátio</Title>
 
       <Paper sx={{ p: 3 }}>
@@ -66,13 +95,25 @@ export default function PatioForm() {
 
             </Grid>
 
-            <Grid item xs={12} style={{ display: 'flex', gap: '20px' }}>
-              <Button type="submit" variant="contained" size="small"><SaveIcon fontSize="small" sx={{ marginRight: '8px', marginBottom: '4px' }} />Gravar</Button>
-              <Button variant="outlined" size="small"><a href="/patio">Voltar</a></Button>
-            </Grid>
+            {error &&
+              <Grid item xs={12} style={{ color: "#f00" }}>
+                <Alert severity="error">
+                  {error}
+                </Alert>
+              </Grid>
+            }
 
-            <Grid item xs={12} style={{color: "#f00"}}>
-              {error}
+            <Grid item xs={12} style={{ display: 'flex', gap: '20px' }}>
+              <Button
+                type="submit"
+                variant="contained"
+                size="small"
+                disabled={error !== ""}
+              >
+                <SaveIcon fontSize="small" sx={{ marginRight: '8px', marginBottom: '4px' }} />
+                {id ? "Atualizar" : "Gravar"}
+              </Button>
+              <Button variant="outlined" size="small"><a href="/patio">Voltar</a></Button>
             </Grid>
 
           </Grid>

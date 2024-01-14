@@ -3,21 +3,52 @@
 import BackdropLoader from "@/components/_ui/BackdropLoader";
 import Title from "@/components/_ui/Title";
 import api from "@/service/api";
+import { TMotivation } from "@/types/TMotivation";
 import SaveIcon from '@mui/icons-material/Save';
-import { Button, Checkbox, FormControlLabel, FormGroup, Grid, Paper, TextField } from "@mui/material";
+import { Alert, Button, Checkbox, FormControlLabel, FormGroup, Grid, Paper, TextField } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export function MotivacaoForm() {
+
+type Props = {
+  id?: number
+}
+
+export function MotivacaoForm({ id }: Props) {
 
   const router = useRouter();
-  const [formData, setFormData] = useState({ name: '', code: '', description: '', transporterRequired: false });
+  const [formData, updateFormData] = useState({ name: '', code: '', description: '', transporterRequired: false });
   const [loading, updateLoading] = useState(false);
   const [error, updateError] = useState("");
 
+
+  useEffect(() => {
+
+    if (id) {
+      const getMotivation = async () => {
+        try {
+          updateLoading(true);
+          const response: TMotivation = (await api.get(`/motivation/${id}`)).data;
+          if (!response) {
+            updateError(`Nenhum registro encontrado para o identificador ${id}.`);
+            return;
+          }
+          updateFormData(prevState => ({ name: response.name, code: response.code, description: response.description, transporterRequired: response.transporterRequired }));
+        } catch (error: any) {
+          updateError(`Falha ao obter os dados da motivação. Mensagem: ${error.message}`)
+        } finally {
+          updateLoading(false);
+        }
+      }
+      getMotivation();
+    }
+  }, [id]);
+
+
+
   const handleChange = (e: any) => {
-    const {value, type, name, checked} = e.target;
-    setFormData(prevState => ({ ...prevState, [name]: type === 'checkbox' ? checked : value }));
+    const { value, type, name, checked } = e.target;
+    updateFormData(prevState => ({ ...prevState, [name]: type === 'checkbox' ? checked : value }));
   }
 
   const handleSubmit = async (e: any) => {
@@ -29,7 +60,11 @@ export function MotivacaoForm() {
   const saveMotivation = async () => {
     try {
       updateLoading(true);
-      await api.post('/motivation', { ...formData });
+
+      id
+        ? await api.patch(`/motivation/${id}`, { ...formData })
+        : await api.post('/motivation', { ...formData });
+
       router.push('/motivacao');
     } catch (error: any) {
       updateError(error.message);
@@ -37,6 +72,8 @@ export function MotivacaoForm() {
       updateLoading(false);
     }
   }
+
+
 
   return (
     <section style={{ background: '#fff', boxShadow: 'var(--box-shadow)', borderRadius: 'var(--border-radius)' }}>
@@ -47,7 +84,7 @@ export function MotivacaoForm() {
 
       <Paper sx={{ p: 3 }}>
 
-        <h3>Nova Motivação</h3>
+        <h3>{id ? "Editar Motivação" : "Nova Motivação"}</h3>
 
         <form action="#" style={{ margin: '20px 0' }} onSubmit={handleSubmit}>
 
@@ -100,14 +137,27 @@ export function MotivacaoForm() {
               </FormGroup>
             </Grid>
 
+            {error &&
+              <Grid item xs={12} style={{ color: "#f00" }}>
+                <Alert severity="error">
+                  {error}
+                </Alert>
+              </Grid>
+            }
+
             <Grid item xs={12} style={{ display: 'flex', gap: '20px' }}>
-              <Button type="submit" variant="contained" size="small"><SaveIcon fontSize="small" sx={{ marginRight: '8px', marginBottom: '4px' }} />Gravar</Button>
+              <Button
+                type="submit"
+                variant="contained"
+                size="small"
+                disabled={error !== ""}
+              >
+                <SaveIcon fontSize="small" sx={{ marginRight: '8px', marginBottom: '4px' }} />
+                {id ? "Atualizar" : "Gravar"}
+              </Button>
               <Button variant="outlined" size="small"><a href="/motivacao">Voltar</a></Button>
             </Grid>
 
-            <Grid item xs={12} style={{ color: "#f00" }}>
-              {error}
-            </Grid>
 
           </Grid>
 

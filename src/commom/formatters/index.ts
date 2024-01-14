@@ -7,6 +7,9 @@ export const formataDataHoraPadraoBR = (value: string) => {
 }
 
 export const formataDataPadraoBR = (value: string) => {
+
+    if(!value) return;
+
     const dataBR = value.split("-").reverse().join("/");
     return dataBR;
 }

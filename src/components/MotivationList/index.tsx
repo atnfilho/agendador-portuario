@@ -5,6 +5,7 @@ import Title from '@/components/_ui/Title';
 import api from '@/service/api';
 import { TMotivation } from '@/types/TMotivation';
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
 import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip } from '@mui/material';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
@@ -42,7 +43,7 @@ export default function MotivationList() {
 
                 <div style={{ width: '95%', margin: 'auto', padding: '20px 0 40px' }}>
 
-                    <Register isAuthorized={ session?.roles?.includes('Administrator') } />
+                    <Register isAuthorized={session?.roles?.includes('Administrator')} />
 
                     <TableContainer>
                         <Table sx={{ minWidth: 650 }} aria-label="simple table" size="small">
@@ -52,6 +53,7 @@ export default function MotivationList() {
                                     <TableCell sx={{ fontWeight: 'bold' }}>Nome</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold' }}>Descrição</TableCell>
                                     <TableCell align='center' sx={{ fontWeight: 'bold' }}>Transportadora</TableCell>
+                                    <TableCell align='center'></TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -61,6 +63,13 @@ export default function MotivationList() {
                                         <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.name}</TableCell>
                                         <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.description}</TableCell>
                                         <TableCell align='center' sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.transporterRequired ? 'SIM' : 'NÃO'}</TableCell>
+                                        <TableCell align='center' sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>
+                                            <Tooltip title="Editar">
+                                                <a href={`/motivacao/${item.id}`}>
+                                                    <EditIcon color='primary' style={{fontSize: '20px'}} />
+                                                </a>
+                                            </Tooltip>
+                                        </TableCell>
                                     </TableRow>
 
                                 ))}

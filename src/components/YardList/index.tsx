@@ -6,6 +6,7 @@ import Title from "@/components/_ui/Title";
 import api from "@/service/api";
 import { TYard } from "@/types/TYard";
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
 import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -50,12 +51,20 @@ export default function YardList() {
                             <TableHead>
                                 <TableRow>
                                     <TableCell sx={{ fontWeight: 'bold' }}>Nome</TableCell>
+                                    <TableCell></TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {yards.map((item: TYard, index: number) => (
                                     <TableRow key={index}>
                                         <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.name}</TableCell>
+                                        <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>
+                                        <Tooltip title="Editar">
+                                                <a href={`/patio/${item.id}`}>
+                                                    <EditIcon color='primary' style={{fontSize: '20px'}} />
+                                                </a>
+                                            </Tooltip>
+                                        </TableCell>
                                     </TableRow>
 
                                 ))}
