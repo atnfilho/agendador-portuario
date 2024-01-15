@@ -164,7 +164,7 @@ export function MotoristaForm({ id }: Props) {
 
             <Paper sx={{ p: 3, pb: 1 }}>
 
-                <h3>{id ? "Formulário de Edição" : "Novo Mororista"}</h3>
+                <h3>{id ? "Formulário de Edição" : "Novo Motorista"}</h3>
 
                 <form encType="multipart/form-data" onSubmit={formik.handleSubmit} style={{ margin: '20px 0' }} >
 
