@@ -77,7 +77,7 @@ export const options: NextAuthOptions = {
             session.id_token = encrypt(token.id_token);
             session.roles = token.decoded.realm_access.roles;
             session.error = token.error;
-            console.log(session.access_token)
+            // console.log(session.access_token)
             return session;
         }
     },

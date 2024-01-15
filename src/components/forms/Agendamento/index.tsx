@@ -38,10 +38,11 @@ const validate = (values: any) => {
 
 
 type Props = {
-    user: string
+    user: string,
+    id?: number
 }
 
-export default function AgendamentoForm({ user }: Props) {
+export default function AgendamentoForm({ user, id }: Props) {
 
     const router = useRouter();
     const [loading, updateLoading] = useState(true);
@@ -197,7 +198,7 @@ export default function AgendamentoForm({ user }: Props) {
 
             <BackdropLoader open={loading} />
 
-            <Title>Agendamento</Title>
+            <Title>Agendamento {id}</Title>
 
 
             <Paper sx={{ p: 3 }}>

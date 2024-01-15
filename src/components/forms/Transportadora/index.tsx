@@ -156,6 +156,7 @@ export default function TransportadoraForm({ id }: Props) {
                 label="CNPJ"
                 size="small"
                 inputProps={{ maxLength: 14 }}
+                InputLabelProps={{ shrink: !!formData.cnpj }}
                 fullWidth
                 name="cnpj"
                 value={cnpjMask(formData.cnpj)}
@@ -182,6 +183,7 @@ export default function TransportadoraForm({ id }: Props) {
                 name="cep"
                 size="small"
                 inputProps={{ maxLength: 8 }}
+                InputLabelProps={{ shrink: !!formData.cep }}
                 value={cepMask(formData.cep)}
                 onChange={handleChange}
                 onBlur={() => {

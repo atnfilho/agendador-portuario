@@ -136,12 +136,12 @@ export default function FrotaDaCasaForm({ id }: Props) {
 
                         <Grid item xs={6}>
                             <FormControl fullWidth size="small">
-                                <InputLabel shrink>Tipo de Veículo</InputLabel>
+                                <InputLabel shrink={!!formData.vehicle_typeId}>Tipo de Veículo</InputLabel>
                                 <Select
                                     label="Tipo de Veículo"
                                     name="vehicle_typeId"
                                     value={formData.vehicle_typeId}
-                                    notched
+                                    notched={!!formData.vehicle_typeId}
                                     required
                                     onChange={handleChange}
                                 >
@@ -223,7 +223,7 @@ export default function FrotaDaCasaForm({ id }: Props) {
                     </Grid>
 
                 </form>
-                <pre>{JSON.stringify(formData, null, 4)}</pre>
+                {/* <pre>{JSON.stringify(formData, null, 4)}</pre> */}
             </Paper>
 
         </section>

@@ -198,7 +198,7 @@ export function MotoristaForm({ id }: Props) {
                                 size="small"
                                 fullWidth
                                 inputProps={{ maxLength: 11 }}
-                                InputLabelProps={{shrink: true}}
+                                InputLabelProps={{shrink: !!formik.values.code}}
                                 value={cpfMask(formik.values.code)}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
