@@ -31,7 +31,7 @@ export default function TransportadoraForm({ id }: Props) {
           updateLoading(true);
           const response = (await api.get(`/transporter/${id}`)).data;
 
-          if(!response) {
+          if (!response) {
             updateError(`Nenhum registro encontrado para o identificador ${id}.`);
             return;
           }
@@ -44,7 +44,7 @@ export default function TransportadoraForm({ id }: Props) {
           const address = addressArr.join(" ").trim();
 
           updateFormData(prevState => ({ name: response.name, cnpj: response.cnpj, socialrazion: response.socialrazion, cep: response.cep, address, number, city, uf }))
-        
+
         } catch (error: any) {
           updateError(`Falha ao obter os dados da transportadora. Mensagem: ${error.message}`)
         } finally {
@@ -106,7 +106,7 @@ export default function TransportadoraForm({ id }: Props) {
       router.push('/transportadora');
 
     } catch (error: any) {
-      updateError(error.message);
+      updateError(`Falha ao gravar os dados da transportadora. Mensagem: ${error.message}`)
     } finally {
       updateLoading(false);
     }
@@ -133,7 +133,7 @@ export default function TransportadoraForm({ id }: Props) {
 
       <Paper sx={{ p: 3 }}>
 
-        <h3>Nova Transportadora</h3>
+        <h3>{id ? "Formulário de Edição" : "Nova Transportadora"}</h3>
 
         <form action="#" style={{ margin: '20px 0' }} onSubmit={handleSubmit}>
 

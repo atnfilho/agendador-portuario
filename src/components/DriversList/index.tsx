@@ -7,6 +7,7 @@ import Title from '@/components/_ui/Title';
 import api from '@/service/api';
 import { TDriver } from '@/types/TDriver';
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
 import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip } from '@mui/material';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
@@ -56,6 +57,7 @@ export default function DriversList() {
                                     <TableCell sx={{ fontWeight: 'bold' }}>CPF</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold' }}>Nº CNH</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold' }}>Validade CNH</TableCell>
+                                    <TableCell></TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -65,6 +67,13 @@ export default function DriversList() {
                                         <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{cpfMask(item.code)}</TableCell>
                                         <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.cnh}</TableCell>
                                         <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{formataDataPadraoBR(item.cnhValidate)}</TableCell>
+                                        <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>
+                                            <Tooltip title="Editar">
+                                                <a href={`/motorista/${item.id}`}>
+                                                    <EditIcon color='primary' style={{ fontSize: '20px' }} />
+                                                </a>
+                                            </Tooltip>
+                                        </TableCell>
                                     </TableRow>
 
                                 ))}

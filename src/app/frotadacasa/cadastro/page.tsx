@@ -1,6 +1,6 @@
 "use client";
 
-import FrotaDaCasaForm from "@/components/forms/FrotaDaCasaForm";
+import FrotaDaCasaForm from "@/components/forms/FrotaDaCasa";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";

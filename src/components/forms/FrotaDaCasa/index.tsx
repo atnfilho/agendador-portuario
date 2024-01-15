@@ -9,7 +9,12 @@ import { Alert, Button, FormControl, Grid, InputLabel, MenuItem, Paper, Select, 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function FrotaDaCasaForm() {
+type Props = {
+    id?: number
+}
+
+
+export default function FrotaDaCasaForm({ id }: Props) {
 
     const router = useRouter();
     const [formData, updateFormData] = useState({ type_vehicle: "", vehicle_typeId: null, plate_front: "", plate_trailer: "", plate_semi_trailer: "" });
@@ -26,6 +31,29 @@ export default function FrotaDaCasaForm() {
         loadSelectOptions();
     }, []);
 
+    useEffect(() => {
+        if (id) {
+            const getOwner = async () => {
+                try {
+                    updateLoading(true);
+                    const response = (await api.get(`/owners/${id}`)).data;
+
+                    if (!response) {
+                        updateError(`Nenhum registro encontrado para o identificador ${id}.`);
+                        return;
+                    }
+                    updateFormData(prevState => ({ type_vehicle: response.type_vehicle, vehicle_typeId: response.vehicle_typeId, plate_front: response.plate_front, plate_trailer: response.plate_trailer, plate_semi_trailer: response.plate_semi_trailer }));
+
+                } catch (error: any) {
+                    updateError(`Falha ao obter os dados do veículo. Mensagem: ${error.message}`);
+                } finally {
+                    updateLoading(false);
+                }
+            }
+            getOwner();
+        }
+    }, [id]);
+
 
     useEffect(() => {
 
@@ -34,6 +62,7 @@ export default function FrotaDaCasaForm() {
         });
 
         updateSelectedVehicle(vehicle);
+        updateFormData(prevState => ({...prevState, plate_front: vehicle?.plate_front ? prevState.plate_front : "", plate_trailer: vehicle?.plate_trailer ? prevState.plate_trailer : "", plate_semi_trailer: vehicle?.plate_semi_trailer ? prevState.plate_semi_trailer : "" }));
 
     }, [formData.vehicle_typeId, vehicleTypeList])
 
@@ -53,7 +82,11 @@ export default function FrotaDaCasaForm() {
 
         try {
             updateLoading(true);
-            await api.post('/owners', { ...formData });
+
+            id
+                ? await api.patch(`/owners/${id}`, { ...formData })
+                : await api.post('/owners', { ...formData });
+
             router.push('/frotadacasa');
         } catch (error: any) {
             updateError(`Falha ao gravar veículo. Mensagem: ${error.message}`);
@@ -82,7 +115,7 @@ export default function FrotaDaCasaForm() {
 
             <Paper sx={{ p: 3, pb: 1 }}>
 
-                <h3>Novo Veículo da Frota</h3>
+                <h3>{id ? "Formulário de Edição" : "Novo Veículo da Frota"}</h3>
 
                 <form action="#" style={{ margin: '20px 0' }} onSubmit={handleSubmit}>
 
@@ -103,11 +136,12 @@ export default function FrotaDaCasaForm() {
 
                         <Grid item xs={6}>
                             <FormControl fullWidth size="small">
-                                <InputLabel>Tipo de Veículo</InputLabel>
+                                <InputLabel shrink>Tipo de Veículo</InputLabel>
                                 <Select
                                     label="Tipo de Veículo"
                                     name="vehicle_typeId"
                                     value={formData.vehicle_typeId}
+                                    notched
                                     required
                                     onChange={handleChange}
                                 >
@@ -173,7 +207,15 @@ export default function FrotaDaCasaForm() {
 
 
                         <Grid item xs={12} style={{ display: 'flex', gap: '20px' }}>
-                            <Button type="submit" variant="contained" size="small" startIcon={<SaveIcon />}>Gravar</Button>
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                size="small"
+                                disabled={error !== ""}
+                                startIcon={<SaveIcon />}
+                            >
+                                {id ? "Atualizar" : "Gravar"}
+                            </Button>
                             <Button variant="outlined" size="small"><a href="/frotadacasa">Voltar</a></Button>
                         </Grid>
 
@@ -181,6 +223,7 @@ export default function FrotaDaCasaForm() {
                     </Grid>
 
                 </form>
+                <pre>{JSON.stringify(formData, null, 4)}</pre>
             </Paper>
 
         </section>

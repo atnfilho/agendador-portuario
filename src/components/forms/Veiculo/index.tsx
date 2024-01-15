@@ -4,20 +4,47 @@ import BackdropLoader from "@/components/_ui/BackdropLoader";
 import Title from "@/components/_ui/Title";
 import api from "@/service/api";
 import SaveIcon from '@mui/icons-material/Save';
-import { Button, Checkbox, FormControlLabel, FormGroup, Grid, Paper, TextField } from "@mui/material";
+import { Alert, Button, Checkbox, FormControlLabel, FormGroup, Grid, Paper, TextField } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function VeiculoForm() {
+type Props = {
+    id?: number
+}
+
+export default function VeiculoForm({ id }: Props) {
 
     const router = useRouter();
-    const [formData, setFormData] = useState({ name: '', code: '', plate_front: false, plate_trailer: false, plate_semi_trailer: false, container_quantity: 0 });
+    const [formData, updateFormData] = useState({ name: '', code: '', plate_front: false, plate_trailer: false, plate_semi_trailer: false, container_quantity: 0 });
     const [loading, updateLoading] = useState(false);
     const [error, updateError] = useState("");
 
+    useEffect(() => {
+        if (id) {
+            const getVehicle = async () => {
+                try {
+                    updateLoading(true);
+                    const response = (await api.get(`/vehicle_type/${id}`)).data;
+
+                    if (!response) {
+                        updateError(`Nenhum registro encontrado para o identificador ${id}.`);
+                        return;
+                    }
+
+                    updateFormData({ name: response.name, code: response.code, plate_front: response.plate_front, plate_trailer: response.plate_trailer, plate_semi_trailer: response.plate_semi_trailer, container_quantity: response.container_quantity })
+                } catch (error: any) {
+                    updateError(`Falha ao obter os dados do veículo. Mensagem: ${error.message}`)
+                } finally {
+                    updateLoading(false);
+                }
+            }
+            getVehicle();
+        }
+    }, [id]);
+
     const handleChange = (e: any) => {
         const { name, value, type, checked } = e.target;
-        setFormData(prevState => ({ ...prevState, [name]: type === 'checkbox' ? checked : value }));
+        updateFormData(prevState => ({ ...prevState, [name]: type === 'checkbox' ? checked : value }));
     }
 
     const handleSubmit = async (e: any) => {
@@ -31,10 +58,14 @@ export default function VeiculoForm() {
 
         try {
             updateLoading(true);
-            await api.post('/vehicle_type', { ...formData });
+
+            id
+                ? await api.patch(`/vehicle_type/${id}`, { ...formData })
+                : await api.post('/vehicle_type', { ...formData });
+
             router.push('/veiculo');
         } catch (error: any) {
-            updateError(error.message);
+            updateError(`Falha ao gravar os dados do veículo. Mensagem: ${error.message}`)
         } finally {
             updateLoading(false);
         }
@@ -65,7 +96,7 @@ export default function VeiculoForm() {
 
             <Paper sx={{ p: 3 }}>
 
-                <h3>Novo Tipo de Veículo</h3>
+                <h3>{id ? "Formulário de Edição" : "Novo Tipo de Veículo"}</h3>
 
                 <form action="#" style={{ margin: '20px 0' }} onSubmit={handleSubmit}>
 
@@ -149,13 +180,25 @@ export default function VeiculoForm() {
                             />
                         </Grid>
 
-                        <Grid item xs={12} style={{ display: 'flex', gap: '20px' }}>
-                            <Button type="submit" variant="contained" size="small" startIcon={<SaveIcon />}>Gravar</Button>
-                            <Button variant="outlined" size="small"><a href="/veiculo">Voltar</a></Button>
-                        </Grid>
+                        {error &&
+                            <Grid item xs={12} style={{ color: "#f00" }}>
+                                <Alert severity="error">
+                                    {error}
+                                </Alert>
+                            </Grid>
+                        }
 
-                        <Grid item xs={12} style={{ color: "#f00" }}>
-                            {error}
+                        <Grid item xs={12} style={{ display: 'flex', gap: '20px' }}>
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                size="small"
+                                startIcon={<SaveIcon />}
+                                disabled={error !== ""}
+                            >
+                                {id ? "Atualizar" : "Gravar"}
+                            </Button>
+                            <Button variant="outlined" size="small"><a href="/veiculo">Voltar</a></Button>
                         </Grid>
 
                     </Grid>

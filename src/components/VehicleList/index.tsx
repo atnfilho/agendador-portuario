@@ -7,6 +7,7 @@ import { TVehicle } from "@/types/TVehicle";
 import AddIcon from '@mui/icons-material/Add';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
+import EditIcon from '@mui/icons-material/Edit';
 import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -45,7 +46,7 @@ export default function VehicleList() {
 
                 <div style={{ width: '95%', margin: 'auto', padding: '20px 0 40px' }}>
 
-                <Register isAuthorized={ session?.roles?.includes('Administrator') } />
+                    <Register isAuthorized={session?.roles?.includes('Administrator')} />
 
                     <TableContainer>
                         <Table sx={{ minWidth: 650 }} aria-label="simple table" size="small">
@@ -57,6 +58,7 @@ export default function VehicleList() {
                                     <TableCell align="center" sx={{ fontWeight: 'bold' }}>Placa Reboque</TableCell>
                                     <TableCell align="center" sx={{ fontWeight: 'bold' }}>Placa Semireboque</TableCell>
                                     <TableCell align="center" sx={{ fontWeight: 'bold' }}>Qtde Conteineres</TableCell>
+                                    <TableCell align="center"></TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -78,6 +80,13 @@ export default function VehicleList() {
                                             <TableCell align="center" sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{plate_trailer}</TableCell>
                                             <TableCell align="center" sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{plate_semi_trailer}</TableCell>
                                             <TableCell align="center" sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.container_quantity}</TableCell>
+                                            <TableCell align="center" sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>
+                                                <Tooltip title="Editar">
+                                                    <a href={`/veiculo/${item.id}`}>
+                                                        <EditIcon color='primary' style={{ fontSize: '20px' }} />
+                                                    </a>
+                                                </Tooltip>
+                                            </TableCell>
                                         </TableRow>
 
                                     )

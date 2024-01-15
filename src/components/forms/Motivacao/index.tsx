@@ -35,7 +35,7 @@ export function MotivacaoForm({ id }: Props) {
           }
           updateFormData(prevState => ({ name: response.name, code: response.code, description: response.description, transporterRequired: response.transporterRequired }));
         } catch (error: any) {
-          updateError(`Falha ao obter os dados da motivação. Mensagem: ${error.message}`)
+          updateError(`Falha ao obter os dados da motivação. Mensagem: ${error.message}`);
         } finally {
           updateLoading(false);
         }
@@ -67,7 +67,7 @@ export function MotivacaoForm({ id }: Props) {
 
       router.push('/motivacao');
     } catch (error: any) {
-      updateError(error.message);
+      updateError(`Falha ao gravar os dados da motivação. Mensagem: ${error.message}`)
     } finally {
       updateLoading(false);
     }
@@ -84,7 +84,7 @@ export function MotivacaoForm({ id }: Props) {
 
       <Paper sx={{ p: 3 }}>
 
-        <h3>{id ? "Editar Motivação" : "Nova Motivação"}</h3>
+        <h3>{id ? "Formulário de Edição" : "Nova Motivação"}</h3>
 
         <form action="#" style={{ margin: '20px 0' }} onSubmit={handleSubmit}>
 
@@ -150,9 +150,9 @@ export function MotivacaoForm({ id }: Props) {
                 type="submit"
                 variant="contained"
                 size="small"
+                startIcon={<SaveIcon />}
                 disabled={error !== ""}
               >
-                <SaveIcon fontSize="small" sx={{ marginRight: '8px', marginBottom: '4px' }} />
                 {id ? "Atualizar" : "Gravar"}
               </Button>
               <Button variant="outlined" size="small"><a href="/motivacao">Voltar</a></Button>

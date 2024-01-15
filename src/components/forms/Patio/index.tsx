@@ -29,6 +29,12 @@ export default function PatioForm({ id }: Props) {
         try {
           updateLoading(true)
           const response = (await api.get(`/yard/${id}`)).data;
+
+          if (!response) {
+            updateError(`Nenhum registro encontrado para o identificador ${id}.`);
+            return;
+          }
+          
           updateFormData(prevState => ({ name: response.name }))
         } catch (error: any) {
           updateError(`Falha ao obter os dados do pátio. Mensagem: ${error.message}`);
@@ -56,13 +62,13 @@ export default function PatioForm({ id }: Props) {
     try {
       updateLoading(true);
 
-      id 
+      id
         ? await api.patch(`/yard/${id}`, { ...formData })
         : await api.post('/yard', { ...formData });
-      
+
       router.push('/patio');
     } catch (error: any) {
-      updateError(`Falha ao gravar dados do pátio. Mensagem: ${error.message}`)
+      updateError(`Falha ao gravar os dados do pátio. Mensagem: ${error.message}`)
     } finally {
       updateLoading(false);
     }
@@ -77,7 +83,7 @@ export default function PatioForm({ id }: Props) {
 
       <Paper sx={{ p: 3 }}>
 
-        <h3>Novo Pátio</h3>
+        <h3>{id ? "Formulário de Edição" : "Novo Pátio"}</h3>
 
         <form action="#" style={{ margin: '20px 0' }} onSubmit={handleSubmit}>
 
@@ -109,8 +115,8 @@ export default function PatioForm({ id }: Props) {
                 variant="contained"
                 size="small"
                 disabled={error !== ""}
+                startIcon={<SaveIcon />}
               >
-                <SaveIcon fontSize="small" sx={{ marginRight: '8px', marginBottom: '4px' }} />
                 {id ? "Atualizar" : "Gravar"}
               </Button>
               <Button variant="outlined" size="small"><a href="/patio">Voltar</a></Button>

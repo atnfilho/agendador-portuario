@@ -1,6 +1,7 @@
 import api from "@/service/api";
 import { TOwner } from "@/types/TOwner";
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
 import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -53,6 +54,7 @@ export default function OwnerList() {
                                     <TableCell align="center" sx={{ fontWeight: 'bold' }}>Placa Frontal</TableCell>
                                     <TableCell align="center" sx={{ fontWeight: 'bold' }}>Placa Reboque</TableCell>
                                     <TableCell align="center" sx={{ fontWeight: 'bold' }}>Placa Semireboque</TableCell>
+                                    <TableCell align="center"></TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -67,6 +69,13 @@ export default function OwnerList() {
                                             <TableCell align="center" sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.plate_front}</TableCell>
                                             <TableCell align="center" sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.plate_trailer}</TableCell>
                                             <TableCell align="center" sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.plate_semi_trailer}</TableCell>
+                                            <TableCell align="center" sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>
+                                                <Tooltip title="Editar">
+                                                    <a href={`/frotadacasa/${item.id}`}>
+                                                        <EditIcon color='primary' style={{ fontSize: '20px' }} />
+                                                    </a>
+                                                </Tooltip>
+                                            </TableCell>
                                         </TableRow>
 
                                     )

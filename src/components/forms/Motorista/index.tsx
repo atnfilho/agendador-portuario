@@ -7,7 +7,7 @@ import Title from "@/components/_ui/Title";
 import api from "@/service/api";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import SaveIcon from '@mui/icons-material/Save';
-import { Button, Grid, Paper, TextField } from "@mui/material";
+import { Alert, Button, Grid, Paper, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -47,10 +47,18 @@ const validate = (values: any) => {
         errors.cnhValidate = "Validade da CNH não informada."
     }
 
+    if (!values.file) {
+        errors.file = "Necessário incluir uma foto do motorista."
+    }
+
     return errors;
 }
 
-export function MotoristaForm() {
+type Props = {
+    id?: number
+}
+
+export function MotoristaForm({ id }: Props) {
 
     const router = useRouter();
     const [file, updateFile] = useState<any>(null);
@@ -71,6 +79,35 @@ export function MotoristaForm() {
             await saveDriver(values, resetForm);
         }
     });
+
+    useEffect(() => {
+
+        if (id) {
+            const getDriver = async () => {
+                try {
+                    updateLoading(true);
+                    const response = (await api.get(`/driver/${id}`)).data;
+
+                    if (!response) {
+                        updateError(`Nenhum registro encontrado para o identificador ${id}.`);
+                        return;
+                    }
+
+                    formik.setFieldValue('name', response.name);
+                    formik.setFieldValue('code', response.code);
+                    formik.setFieldValue('cnh', response.cnh);
+                    formik.setFieldValue('cnhValidate', response.cnhValidate);
+
+                } catch (error: any) {
+                    updateError(`Falha ao obter os dados do motorista. Mensagem: ${error.message}`);
+                } finally {
+                    updateLoading(false);
+                }
+            }
+            getDriver();
+        }
+
+    }, [id]);
 
     useEffect(() => {
 
@@ -98,11 +135,21 @@ export function MotoristaForm() {
     const saveDriver = async (data: any, resetForm: Function) => {
         try {
             updateLoading(true);
-            await api.post(`/driver`, { ...data }, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
+
+            {
+                id
+                    ? await api.patch(`/driver/${id}`, { ...data }, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    })
+                    : await api.post(`/driver`, { ...data }, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    })
+            };
+
             resetForm();
             router.push('/motorista');
         } catch (error: any) {
@@ -121,9 +168,9 @@ export function MotoristaForm() {
 
             <Title>Cadastro</Title>
 
-            <Paper sx={{ p: 3, pb: 0 }}>
+            <Paper sx={{ p: 3, pb: 1 }}>
 
-                <h3>Novo Motorista</h3>
+                <h3>{id ? "Formulário de Edição" : "Novo Mororista"}</h3>
 
                 <form encType="multipart/form-data" onSubmit={formik.handleSubmit} style={{ margin: '20px 0' }} >
 
@@ -151,6 +198,7 @@ export function MotoristaForm() {
                                 size="small"
                                 fullWidth
                                 inputProps={{ maxLength: 11 }}
+                                InputLabelProps={{shrink: true}}
                                 value={cpfMask(formik.values.code)}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
@@ -201,7 +249,7 @@ export function MotoristaForm() {
 
                             <div style={{ border: '1px solid #cecece', background: '#F0F0F0', borderRadius: '4px', textAlign: 'center' }}>
 
-                                <div style={{margin: '20px 0 0'}}>
+                                <div style={{ margin: '20px 0 0' }}>
                                     <img style={{ maxHeight: '200px', maxWidth: '200px', width: 'auto', objectFit: 'contain' }} src={fileDataURL} alt="" />
                                 </div>
 
@@ -235,24 +283,35 @@ export function MotoristaForm() {
                                         Foto do Motorista
                                     </Button>
                                 </label>
-                                {formik.touched.file && formik.errors.file ? <div style={{ margin: '5px 5px 0', fontSize: '0.8rem', color: '#f00' }}>{formik.errors.file}</div> : null}
                             </div>
+                            {formik.errors.file ? <div style={{ margin: '5px 5px 0', fontSize: '0.8rem', color: '#f00' }}>{formik.errors.file}</div> : null}
 
                         </Grid>
 
+                        {error &&
+                            <Grid item xs={12} style={{ color: "#f00" }}>
+                                <Alert severity="error">
+                                    {error}
+                                </Alert>
+                            </Grid>
+                        }
 
                         <Grid item xs={12} style={{ display: 'flex', gap: '20px', margin: '40px 0 10px' }}>
-                            <Button type="submit" variant="contained" size="small" startIcon={<SaveIcon />}>Gravar</Button>
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                size="small"
+                                startIcon={<SaveIcon />}
+                                disabled={error !== ""}
+                            >
+                                {id ? "Atualizar" : "Gravar"}
+                            </Button>
                             <Button variant="outlined" size="small"><a href="/motorista">Voltar</a></Button>
-                        </Grid>
-
-                        <Grid item xs={12} style={{ color: "#f00" }}>
-                            {error}
                         </Grid>
 
                     </Grid>
 
-
+                    {/* <pre>{JSON.stringify(formik.values, null, 4)}</pre> */}
                 </form>
             </Paper>
 
