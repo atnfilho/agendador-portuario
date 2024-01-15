@@ -19,6 +19,7 @@ export default function DriversList() {
     const [loading, updateLoading] = useState(true);
     const { data: session } = useSession();
 
+    const isAuthorized = session?.roles?.includes('Administrator');
 
     useEffect(() => {
         getMotivations();
@@ -47,16 +48,17 @@ export default function DriversList() {
 
                 <div style={{ width: '95%', margin: 'auto', padding: '20px 0 40px' }}>
 
-                    <Register isAuthorized={session?.roles?.includes('Administrator')} />
+                    <Register isAuthorized={isAuthorized} />
 
                     <TableContainer>
                         <Table sx={{ minWidth: 650 }} aria-label="simple table" size="small">
                             <TableHead>
                                 <TableRow>
                                     <TableCell sx={{ fontWeight: 'bold' }}>Nome</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>CPF</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Nº CNH</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Validade CNH</TableCell>
+                                    <TableCell align='center' sx={{ fontWeight: 'bold' }}>CPF</TableCell>
+                                    <TableCell align='center' sx={{ fontWeight: 'bold' }}>Data de Nascimento</TableCell>
+                                    <TableCell align='center' sx={{ fontWeight: 'bold' }}>Nº CNH</TableCell>
+                                    <TableCell align='center' sx={{ fontWeight: 'bold' }}>Validade CNH</TableCell>
                                     <TableCell></TableCell>
                                 </TableRow>
                             </TableHead>
@@ -64,15 +66,17 @@ export default function DriversList() {
                                 {drivers.map((item: TDriver, index: number) => (
                                     <TableRow key={item.code}>
                                         <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.name}</TableCell>
-                                        <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{cpfMask(item.code)}</TableCell>
-                                        <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.cnh}</TableCell>
-                                        <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{formataDataPadraoBR(item.cnhValidate)}</TableCell>
+                                        <TableCell align='center' sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{cpfMask(item.code)}</TableCell>
+                                        <TableCell align='center' sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{formataDataPadraoBR(item.birth)}</TableCell>
+                                        <TableCell align='center' sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.cnh}</TableCell>
+                                        <TableCell align='center' sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{formataDataPadraoBR(item.cnhValidate)}</TableCell>
                                         <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>
-                                            <Tooltip title="Editar">
-                                                <a href={`/motorista/${item.id}`}>
-                                                    <EditIcon color='primary' style={{ fontSize: '20px' }} />
-                                                </a>
-                                            </Tooltip>
+                                            {isAuthorized &&
+                                                <Tooltip title="Editar">
+                                                    <a href={`/motorista/${item.id}`}>
+                                                        <EditIcon color='primary' style={{ fontSize: '20px' }} />
+                                                    </a>
+                                                </Tooltip>}
                                         </TableCell>
                                     </TableRow>
 

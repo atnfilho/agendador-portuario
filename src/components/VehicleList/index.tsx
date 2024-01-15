@@ -19,6 +19,8 @@ export default function VehicleList() {
     const [loading, updateLoading] = useState(true);
     const { data: session } = useSession();
 
+    const isAuthorized = session?.roles?.includes('Administrator');
+
     useEffect(() => {
         getVehicles();
     }, []);
@@ -46,7 +48,7 @@ export default function VehicleList() {
 
                 <div style={{ width: '95%', margin: 'auto', padding: '20px 0 40px' }}>
 
-                    <Register isAuthorized={session?.roles?.includes('Administrator')} />
+                    <Register isAuthorized={isAuthorized} />
 
                     <TableContainer>
                         <Table sx={{ minWidth: 650 }} aria-label="simple table" size="small">
@@ -81,11 +83,12 @@ export default function VehicleList() {
                                             <TableCell align="center" sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{plate_semi_trailer}</TableCell>
                                             <TableCell align="center" sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.container_quantity}</TableCell>
                                             <TableCell align="center" sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>
-                                                <Tooltip title="Editar">
-                                                    <a href={`/veiculo/${item.id}`}>
-                                                        <EditIcon color='primary' style={{ fontSize: '20px' }} />
-                                                    </a>
-                                                </Tooltip>
+                                                {isAuthorized &&
+                                                    <Tooltip title="Editar">
+                                                        <a href={`/veiculo/${item.id}`}>
+                                                            <EditIcon color='primary' style={{ fontSize: '20px' }} />
+                                                        </a>
+                                                    </Tooltip>}
                                             </TableCell>
                                         </TableRow>
 

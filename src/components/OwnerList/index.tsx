@@ -15,6 +15,8 @@ export default function OwnerList() {
     const [loading, updateLoading] = useState(true);
     const { data: session } = useSession();
 
+    const isAuthorized = session?.roles?.includes('Administrator');
+
     useEffect(() => {
         getOwners();
     }, []);
@@ -42,7 +44,7 @@ export default function OwnerList() {
 
                 <div style={{ width: '95%', margin: 'auto', padding: '20px 0 40px' }}>
 
-                    <Register isAuthorized={session?.roles?.includes('Administrator')} />
+                    <Register isAuthorized={isAuthorized} />
 
                     <TableContainer>
                         <Table sx={{ minWidth: 650 }} aria-label="simple table" size="small">
@@ -60,7 +62,6 @@ export default function OwnerList() {
                             <TableBody>
                                 {owners.map((item: TOwner, index: number) => {
 
-
                                     return (
                                         <TableRow key={index}>
                                             <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed', textTransform: 'uppercase' }}>{item.type_vehicle}</TableCell>
@@ -70,11 +71,12 @@ export default function OwnerList() {
                                             <TableCell align="center" sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.plate_trailer}</TableCell>
                                             <TableCell align="center" sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.plate_semi_trailer}</TableCell>
                                             <TableCell align="center" sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>
-                                                <Tooltip title="Editar">
-                                                    <a href={`/frotadacasa/${item.id}`}>
-                                                        <EditIcon color='primary' style={{ fontSize: '20px' }} />
-                                                    </a>
-                                                </Tooltip>
+                                                {isAuthorized &&
+                                                    <Tooltip title="Editar">
+                                                        <a href={`/frotadacasa/${item.id}`}>
+                                                            <EditIcon color='primary' style={{ fontSize: '20px' }} />
+                                                        </a>
+                                                    </Tooltip>}
                                             </TableCell>
                                         </TableRow>
 

@@ -14,8 +14,6 @@ import { useEffect, useState } from "react";
 import { isCNH, isCPF } from "validation-br";
 
 
-const imageMimeType = /image\/(png|jpg|jpeg)/i;
-
 const validate = (values: any) => {
     const errors: any = {};
 
@@ -47,6 +45,10 @@ const validate = (values: any) => {
         errors.cnhValidate = "Validade da CNH não informada."
     }
 
+    if (!values.birth) {
+        errors.birth = "Data de nascimento não informada."
+    }
+
     if (!values.file) {
         errors.file = "Necessário incluir uma foto do motorista."
     }
@@ -61,15 +63,28 @@ type Props = {
 export function MotoristaForm({ id }: Props) {
 
     const router = useRouter();
-    const [file, updateFile] = useState<any>(null);
-    const [fileDataURL, setFileDataURL] = useState<any>(null);
     const [loading, updateLoading] = useState(false);
     const [error, updateError] = useState("");
+    const [image, setImage] = useState<any>(null);
+
+    const handleImageChange = (e: any) => {
+        const file = e.target.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImage(reader.result);
+                formik.setFieldValue("file", reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
     const formik = useFormik({
         initialValues: {
             name: "",
             code: "",
+            birth: "",
             cnh: "",
             cnhValidate: "",
             file: ""
@@ -96,6 +111,7 @@ export function MotoristaForm({ id }: Props) {
                     formik.setFieldValue('name', response.name);
                     formik.setFieldValue('code', response.code);
                     formik.setFieldValue('cnh', response.cnh);
+                    formik.setFieldValue('birth', response.birth);
                     formik.setFieldValue('cnhValidate', response.cnhValidate);
 
                 } catch (error: any) {
@@ -109,28 +125,6 @@ export function MotoristaForm({ id }: Props) {
 
     }, [id]);
 
-    useEffect(() => {
-
-        let fileReader: any, isCancel = false;
-
-        if (file) {
-            const fileReader = new FileReader();
-            fileReader.onload = (e: any) => {
-                const { result } = e.target;
-                if (result && !isCancel) {
-                    setFileDataURL(result);
-                }
-            }
-            fileReader.readAsDataURL(file);
-        }
-
-        return () => {
-            isCancel = true;
-            if (fileReader && fileReader.readyState === 1) {
-                fileReader.abort();
-            }
-        }
-    }, [file])
 
     const saveDriver = async (data: any, resetForm: Function) => {
         try {
@@ -198,13 +192,30 @@ export function MotoristaForm({ id }: Props) {
                                 size="small"
                                 fullWidth
                                 inputProps={{ maxLength: 11 }}
-                                InputLabelProps={{shrink: !!formik.values.code}}
+                                InputLabelProps={{ shrink: !!formik.values.code }}
                                 value={cpfMask(formik.values.code)}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
                                 required
                             />
                             {formik.touched.code && formik.errors.code ? <div style={{ margin: '5px 5px 0', fontSize: '0.8rem', color: '#f00' }}>{formik.errors.code}</div> : null}
+                        </Grid>
+
+                        <Grid item xs={2}>
+                            <TextField
+                                label="Data de Nascimento"
+                                name="birth"
+                                size="small"
+                                type="date"
+                                fullWidth
+                                inputProps={{ maxLength: 10 }}
+                                InputLabelProps={{ shrink: true }}
+                                value={formik.values.birth}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                required
+                            />
+                            {formik.touched.birth && formik.errors.birth ? <div style={{ margin: '5px 5px 0', fontSize: '0.8rem', color: '#f00' }}>{formik.errors.birth}</div> : null}
                         </Grid>
 
                         <Grid xs={12}></Grid>
@@ -248,10 +259,12 @@ export function MotoristaForm({ id }: Props) {
                         <Grid item xs={12}>
 
                             <div style={{ border: '1px solid #cecece', background: '#F0F0F0', borderRadius: '4px', textAlign: 'center' }}>
-
-                                <div style={{ margin: '20px 0 0' }}>
-                                    <img style={{ maxHeight: '200px', maxWidth: '200px', width: 'auto', objectFit: 'contain' }} src={fileDataURL} alt="" />
-                                </div>
+                                {image && (
+                                    <div>
+                                        <h2 style={{margin: '10px 0'}}>Pré-visualização da imagem:</h2>
+                                        <img src={image} alt="Imagem selecionada" style={{ maxHeight: '200px', maxWidth: '200px', width: 'auto', objectFit: 'contain' }} />
+                                    </div>
+                                )}
 
                                 <label htmlFor="upload-photo">
                                     <input
@@ -261,18 +274,7 @@ export function MotoristaForm({ id }: Props) {
                                         required
                                         style={{ display: 'none' }}
                                         id="upload-photo"
-                                        onChange={(e) => {
-                                            const { files } = e.target;
-                                            if (files) {
-                                                const file = files[0];
-                                                if (!file.type.match(imageMimeType)) {
-                                                    alert('Extensão de imagem não é válida.')
-                                                    return;
-                                                }
-                                                updateFile(file);
-                                                formik.handleChange(e);
-                                            }
-                                        }}
+                                        onChange={handleImageChange}
                                     />
                                     <Button
                                         color="primary"

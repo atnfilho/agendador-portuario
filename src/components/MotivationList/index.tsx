@@ -17,6 +17,8 @@ export default function MotivationList() {
     const [loading, updateLoading] = useState(true);
     const { data: session } = useSession();
 
+    const isAuthorized = session?.roles?.includes('Administrator');
+
     useEffect(() => {
         getMotivations();
     }, []);
@@ -43,7 +45,7 @@ export default function MotivationList() {
 
                 <div style={{ width: '95%', margin: 'auto', padding: '20px 0 40px' }}>
 
-                    <Register isAuthorized={session?.roles?.includes('Administrator')} />
+                    <Register isAuthorized={isAuthorized} />
 
                     <TableContainer>
                         <Table sx={{ minWidth: 650 }} aria-label="simple table" size="small">
@@ -64,11 +66,12 @@ export default function MotivationList() {
                                         <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.description}</TableCell>
                                         <TableCell align='center' sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.transporterRequired ? 'SIM' : 'NÃO'}</TableCell>
                                         <TableCell align='center' sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>
-                                            <Tooltip title="Editar">
-                                                <a href={`/motivacao/${item.id}`}>
-                                                    <EditIcon color='primary' style={{fontSize: '20px'}} />
-                                                </a>
-                                            </Tooltip>
+                                            {isAuthorized &&
+                                                <Tooltip title="Editar">
+                                                    <a href={`/motivacao/${item.id}`}>
+                                                        <EditIcon color='primary' style={{ fontSize: '20px' }} />
+                                                    </a>
+                                                </Tooltip>}
                                         </TableCell>
                                     </TableRow>
 

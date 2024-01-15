@@ -19,6 +19,8 @@ export default function TransporterList() {
     const [loading, updateLoading] = useState(true);
     const { data: session } = useSession();
 
+    const isAuthorized = session?.roles?.includes('Administrator');
+
     useEffect(() => {
         getTransporters();
     }, []);
@@ -46,7 +48,7 @@ export default function TransporterList() {
 
                 <div style={{ width: '95%', margin: 'auto', padding: '20px 0 40px' }}>
 
-                    <Register isAuthorized={session?.roles?.includes('Administrator')} />
+                    <Register isAuthorized={isAuthorized} />
 
                     <TableContainer>
                         <Table sx={{ minWidth: 650 }} aria-label="simple table" size="small">
@@ -71,11 +73,12 @@ export default function TransporterList() {
                                         <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{cepMask(item.cep)}</TableCell>
                                         <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.city}</TableCell>
                                         <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>
-                                            <Tooltip title="Editar">
-                                                <a href={`/transportadora/${item.id}`}>
-                                                    <EditIcon color='primary' style={{ fontSize: '20px' }} />
-                                                </a>
-                                            </Tooltip>
+                                            {isAuthorized &&
+                                                <Tooltip title="Editar">
+                                                    <a href={`/transportadora/${item.id}`}>
+                                                        <EditIcon color='primary' style={{ fontSize: '20px' }} />
+                                                    </a>
+                                                </Tooltip>}
                                         </TableCell>
                                     </TableRow>
 

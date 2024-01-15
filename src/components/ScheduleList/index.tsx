@@ -15,6 +15,8 @@ export default function ScheduleList() {
     const [loading, updateLoading] = useState(true);
     const { data: session } = useSession();
 
+    const isAuthorized = session?.roles?.includes('Administrator');
+
     useEffect(() => {
         getSchedules();
     }, []);
@@ -41,7 +43,7 @@ export default function ScheduleList() {
 
                 <div style={{ width: '95%', margin: 'auto', padding: '20px 0 40px' }}>
 
-                    <Register loading={loading} isAuthorized={session?.roles?.includes('Administrator')} />
+                    <Register loading={loading} isAuthorized={isAuthorized} />
 
                     <DataTableComponent data={schedules} loading={loading} />
                 </div>
