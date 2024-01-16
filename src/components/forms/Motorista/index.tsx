@@ -67,14 +67,14 @@ export function MotoristaForm({ id }: Props) {
     const [error, updateError] = useState("");
     const [image, setImage] = useState<any>(null);
 
+
     const handleImageChange = (e: any) => {
         const file = e.target.files[0];
-
         if (file) {
+            formik.setFieldValue("file", file);
             const reader = new FileReader();
             reader.onloadend = () => {
                 setImage(reader.result);
-                formik.setFieldValue("file", reader.result);
             };
             reader.readAsDataURL(file);
         }

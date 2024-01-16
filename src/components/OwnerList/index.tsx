@@ -24,6 +24,7 @@ export default function OwnerList() {
     async function getOwners() {
         try {
             const response = await api.get('/owners');
+            console.log(response)
             updateOwners(response.data.items);
         } catch (error) {
             console.log(error);
@@ -50,12 +51,8 @@ export default function OwnerList() {
                         <Table sx={{ minWidth: 650 }} aria-label="simple table" size="small">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Tipo de Veículo</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Modelo</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Código</TableCell>
-                                    <TableCell align="center" sx={{ fontWeight: 'bold' }}>Placa Frontal</TableCell>
-                                    <TableCell align="center" sx={{ fontWeight: 'bold' }}>Placa Reboque</TableCell>
-                                    <TableCell align="center" sx={{ fontWeight: 'bold' }}>Placa Semireboque</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}>Placa</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}>Posição</TableCell>
                                     <TableCell align="center"></TableCell>
                                 </TableRow>
                             </TableHead>
@@ -64,12 +61,8 @@ export default function OwnerList() {
 
                                     return (
                                         <TableRow key={index}>
-                                            <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed', textTransform: 'uppercase' }}>{item.type_vehicle}</TableCell>
-                                            <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.vehicle_type.name}</TableCell>
-                                            <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.vehicle_type.code}</TableCell>
-                                            <TableCell align="center" sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.plate_front}</TableCell>
-                                            <TableCell align="center" sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.plate_trailer}</TableCell>
-                                            <TableCell align="center" sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.plate_semi_trailer}</TableCell>
+                                            <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed', textTransform: 'uppercase' }}>{item.plate}</TableCell>
+                                            <TableCell sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>{item.plate_position}</TableCell>
                                             <TableCell align="center" sx={{ background: index % 2 == 0 ? '#fff' : '#ededed' }}>
                                                 {isAuthorized &&
                                                     <Tooltip title="Editar">
